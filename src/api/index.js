@@ -6,7 +6,9 @@ module.exports = {
     //品牌
     brand: {},
     //购物车
-    cart: {},
+    cart: {
+        my: "/api/cart/my"
+    },
     //订单
     order: {},
     //租赁
