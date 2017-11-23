@@ -9,8 +9,6 @@
       <router-link to="/about">注册</router-link>
     </div>
     <mt-button type="primary" size="large" @click.native="login">登录</mt-button>
-    <hr>
-    <mt-button type="primary" size="large" @click.native="getGoodsList">产品列表</mt-button>
   </div>
 </template>
 

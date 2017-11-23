@@ -32,7 +32,7 @@ module.exports = {
         assetsPublicPath: "/",
         proxyTable: {
             "/api": {
-                target: "http://192.168.1.114:883", //node服务路径
+                target: "http://192.168.1.114:886", //node服务路径
                 changeOrigin: true,
                 pathRewrite: {
                     "^/api": "/api"
