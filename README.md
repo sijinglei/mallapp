@@ -1,5 +1,6 @@
 # mallapp
-一款基于nodejs+vuejs+axios的webapp。
+
+一款基于 nodejs+vuejs+axios 的 webapp。
 
 > 商城 h5 项目
 
