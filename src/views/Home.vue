@@ -6,6 +6,7 @@
 </template>
 <script>
 import tHeader from "@/components/common/m-header";
+import api from "@/api";
 export default {
   data() {
     return {
@@ -16,12 +17,12 @@ export default {
     tHeader
   },
   mounted() {
-    this.getGoodsList();
+    this.goodsCat();
   },
   methods: {
-    getGoodsList() {
+    goodsCat() {
       this.$axios
-        .get("/api/goods/test")
+        .get(api.goods.catlist)
         .then(function(data) {
           console.log("获取列表成功！！！！");
           console.log(data.data);

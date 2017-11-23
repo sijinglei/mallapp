@@ -1,11 +1,11 @@
 var http = require("http");
-var api = require("./api");
+var base = require("./base");
 
 var HttpClient = {
     //资源请求入口
     Get: function(path, loginCookie, callback) {
         var options = this.ClientHeader(
-            api.apiConfig.apiBasePath + path,
+            base.apiConfig.apiBasePath + path.replace("/api", ""),
             loginCookie,
             "get"
         );
@@ -14,7 +14,7 @@ var HttpClient = {
 
     Post: function(path, loginCookie, reqData, callback) {
         var options = this.ClientHeader(
-            api.apiConfig.apiBasePath + path,
+            base.apiConfig.apiBasePath + path.replace("/api", ""),
             reqData,
             "post"
         );
@@ -234,8 +234,8 @@ var HttpClient = {
     //一般接口请求头
     ClientHeader: function(path, loginCookie, method) {
         var options = {
-            host: api.apiConfig.host,
-            port: api.apiConfig.port,
+            host: base.apiConfig.host,
+            port: base.apiConfig.port,
             path: path,
             method: method,
             headers: {
@@ -249,8 +249,8 @@ var HttpClient = {
     ClientLoginHeader: function(path, data, method) {
         var _contentType = "application/json";
         var options = {
-            host: api.loginConfig.host,
-            port: api.loginConfig.port,
+            host: base.loginConfig.host,
+            port: base.loginConfig.port,
             path: path,
             method: method,
             headers: {

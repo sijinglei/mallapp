@@ -10,10 +10,10 @@
 # install dependencies
 npm install
 
-# website with hot reload at localhost:885
+# website with hot reload at 网站默认地址：localhost:885
 npm run dev
 
-#启动后台node服务，默认地址 localhost:883
+#启动后台node服务，默认地址：localhost:886
 npm run start
 
 # build for production with minification
