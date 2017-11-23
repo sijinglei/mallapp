@@ -21,13 +21,14 @@ export default {
   },
   methods: {
     goodsCat() {
-      this.$axios
+      var that = this;
+      that.$axios
         .get(api.goods.catlist)
         .then(function(data) {
           console.log("获取列表成功！！！！");
           console.log(data.data);
           if (data.data.code != "999") {
-            this.msg = data.data.message;
+            that.msg = data.data.message;
           } else {
           }
         })

@@ -34,9 +34,27 @@ app.use(cookieParser());
 //添加gzip压缩
 app.use(compression());
 // app.use(express.static(path.join(__dirname, "public")));
-
-console.log(1);
+//如果session过期
+app.use(function(req, res, next) {
+    if (!req.session.loginHeaders) {
+        console.log("跳转到超时页面或跳转到登陆页面");
+    }
+});
+//刷新session的过期时间
+app.use(function(req, res, next) {
+    if (typeof req.session != "undefined") {
+        if (typeof req.session.loginHeaders != "undefined") {
+            if (typeof req.session.expire_time != "undefined") {
+                if (new Date(req.session.expire_time) > new Date()) {
+                    req.session._garbage = Date();
+                    req.session.touch();
+                }
+            }
+        }
+    }
+    next();
+});
 app.use("/", routes);
 
-console.log(3);
+console.log("启动成功！");
 module.exports = app;

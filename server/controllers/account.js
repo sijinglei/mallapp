@@ -23,11 +23,10 @@ exports.loginIn = function(req, res) {
         console.log("------------保存session---------------");
         req.session.loginHeaders = headers;
         console.log(obj);
-        //最终过期时间
-        // var expire_time = new Date();
-        // expire_time.setHours(expire_time.getHours() + 2);
-        // req.session.expire_time = expire_time.toLocaleString();
-
+        //最终过期时间，如果没有任何操作，2小时过期
+        var expire_time = new Date();
+        expire_time.setHours(expire_time.getHours() + 2);
+        req.session.expire_time = expire_time.toLocaleString();
         res.json(obj);
     });
 };

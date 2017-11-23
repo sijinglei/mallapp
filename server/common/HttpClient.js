@@ -7,6 +7,7 @@ var HttpClient = {
         var options = this.ClientHeader(
             base.apiConfig.apiBasePath + path.replace("/api", ""),
             loginCookie,
+            "",
             "get"
         );
         this.HttpGet(options, callback);
@@ -15,6 +16,7 @@ var HttpClient = {
     Post: function(path, loginCookie, reqData, callback) {
         var options = this.ClientHeader(
             base.apiConfig.apiBasePath + path.replace("/api", ""),
+            loginCookie,
             reqData,
             "post"
         );
@@ -232,7 +234,7 @@ var HttpClient = {
         }
     },
     //一般接口请求头
-    ClientHeader: function(path, loginCookie, method) {
+    ClientHeader: function(path, loginCookie, data, method) {
         var options = {
             host: base.apiConfig.host,
             port: base.apiConfig.port,
@@ -240,7 +242,8 @@ var HttpClient = {
             method: method,
             headers: {
                 Cookie: loginCookie,
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "content-Length": Buffer.byteLength(data, "utf8")
             }
         };
         return options;
