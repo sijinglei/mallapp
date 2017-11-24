@@ -13,22 +13,27 @@ exports.loginIn = function(req, res) {
         method: "user.login",
         v: "1.0",
         format: "json",
-        loginType: "3",
-        sign: "F5E9DBBED15A7DE844D2F522028740809B9CD183"
+        loginType: "3"
     };
+    var secret = "a4160d00-b083-40f9-a749-07aef8782001";
+    reqData.sign = getSign(reqData, secret);
+    console.log("sign=" + reqData.sign);
     //url传值用qs,  body传值使用json
     var data = qs.stringify(reqData);
-    client.GetByClientId("/router/user.login?" + data, (headers, chunk) => {
-        var obj = JSON.parse(chunk);
-        console.log("------------保存session---------------");
-        req.session.loginHeaders = headers;
-        console.log(obj);
-        //最终过期时间，如果没有任何操作，2小时过期
-        var expire_time = new Date();
-        expire_time.setHours(expire_time.getHours() + 2);
-        req.session.expire_time = expire_time.toLocaleString();
-        res.json(obj);
-    });
+    client.GetByClientId(
+        "/newmobile/router/user.login?" + data,
+        (headers, chunk) => {
+            var obj = JSON.parse(chunk);
+            console.log("------------保存session---------------");
+            req.session.loginHeaders = headers;
+            console.log(obj);
+            //最终过期时间，如果没有任何操作，2小时过期
+            var expire_time = new Date();
+            expire_time.setHours(expire_time.getHours() + 2);
+            req.session.expire_time = expire_time.toLocaleString();
+            res.json(obj);
+        }
+    );
 };
 //注册
 exports.register = function(req, res) {
@@ -44,3 +49,30 @@ exports.getMobileCode = function(req, res) {
         }
     );
 };
+//生成签名方法
+function getSign(data, secret) {
+    var string = raw1(data);
+    string = secret + string + secret;
+    console.log(string);
+    var crypto = require("crypto");
+    return crypto
+        .createHash("sha1")
+        .update(string)
+        .digest("hex")
+        .toUpperCase();
+}
+//处理签名数据
+function raw1(args) {
+    var keys = Object.keys(args);
+    keys = keys.sort();
+    var newArgs = {};
+    keys.forEach(function(key) {
+        newArgs[key] = args[key];
+    });
+    var string = "";
+    for (var k in newArgs) {
+        string += k + newArgs[k];
+    }
+    string = string.substr(0);
+    return string;
+}

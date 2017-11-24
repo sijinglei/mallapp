@@ -21,7 +21,7 @@ export default {
     return {
       title: "登陆",
       userInfo: {
-        username: "wench",
+        username: "13528800028", //"wench",
         userpwd: "w111111"
       }
     };

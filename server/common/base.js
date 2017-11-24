@@ -1,8 +1,8 @@
 var api = {
     //登录接口配置
     loginConfig: {
-        host: "192.168.1.104",
-        port: "8122"
+        host: "test5.tronker.com",
+        port: "80"
     },
     //资源接口配置
     apiConfig: {
