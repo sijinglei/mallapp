@@ -35,11 +35,6 @@ app.use(cookieParser());
 app.use(compression());
 // app.use(express.static(path.join(__dirname, "public")));
 //如果session过期
-app.use(function(req, res, next) {
-    if (!req.session.loginHeaders) {
-        console.log("跳转到超时页面或跳转到登陆页面");
-    }
-});
 //刷新session的过期时间
 app.use(function(req, res, next) {
     if (typeof req.session != "undefined") {

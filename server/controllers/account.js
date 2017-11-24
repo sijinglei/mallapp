@@ -30,3 +30,17 @@ exports.loginIn = function(req, res) {
         res.json(obj);
     });
 };
+//注册
+exports.register = function(req, res) {
+    var mobile = req.query.mobile;
+};
+//获取手机验证码
+exports.getMobileCode = function(req, res) {
+    var mobile = req.query.mobile;
+    client.GetByClientId(
+        "/user.register.mobile.code?mobile=" + mobile,
+        (headers, chunk) => {
+            console.log(chunk);
+        }
+    );
+};

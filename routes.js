@@ -14,6 +14,9 @@ var islogin = false;
 //登录
 router.get("/api/account/loginIn", account.loginIn);
 
+//发送手机验证码
+router.get(api.account.getmobilecode, account.getMobileCode);
+
 //测试
 router.get("/api/goods/test", goods.goodList);
 //商城类目
@@ -21,5 +24,7 @@ router.get(api.goods.catlist, goods.goodsCat);
 
 //商城类目
 router.get(api.cart.my, cart.cartMy);
+//下单
+router.post(api.order.add, goods.orderAdd);
 
 module.exports = router;

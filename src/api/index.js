@@ -1,4 +1,9 @@
 module.exports = {
+    account: {
+        login: "/api/account/loginIn",
+        register: "/api/account/register",
+        getmobilecode: "/api/user/mobilecode"
+    },
     //商品
     goods: {
         catlist: "/api/goodsCat/list"
@@ -10,7 +15,9 @@ module.exports = {
         my: "/api/cart/my"
     },
     //订单
-    order: {},
+    order: {
+        add: "/api/order/add"
+    },
     //租赁
     certification: {},
     //个人中心

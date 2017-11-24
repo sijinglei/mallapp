@@ -15,6 +15,7 @@
 <script>
 import { Toast } from "mint-ui";
 import { GetJsonpData } from "../api/jsonpData";
+import api from "@/api";
 export default {
   data() {
     return {
@@ -33,7 +34,7 @@ export default {
       var that = this;
       console.log("======请求开始=======");
       that.$axios
-        .get("/api/account/loginIn", {
+        .get(api.account.login, {
           params: that.userInfo
         })
         .then(function(res) {

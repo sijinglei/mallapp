@@ -25,11 +25,13 @@ var HttpClient = {
     //登录注册请求入口
     GetByClientId: function(path, callback) {
         var options = this.ClientLoginHeader(path, "", "get");
+        console.log(options);
         this.HttpLoginGet(options, callback);
     },
 
     PostByClientId: function(path, reqData, callback) {
         var options = this.ClientLoginHeader(path, reqData, "post");
+
         this.HttpPost(options, reqData, callback);
     },
     //Get方法
