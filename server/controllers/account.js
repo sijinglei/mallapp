@@ -1,5 +1,3 @@
-// var OAuthHelp = require("../common/AuthorizationHelp");
-
 var qs = require("querystring");
 var client = require("../common/HttpClient");
 
@@ -17,7 +15,6 @@ exports.loginIn = function(req, res) {
     };
     var secret = "a4160d00-b083-40f9-a749-07aef8782001";
     reqData.sign = getSign(reqData, secret);
-    console.log("sign=" + reqData.sign);
     //url传值用qs,  body传值使用json
     var data = qs.stringify(reqData);
     client.GetByClientId(
