@@ -1,34 +1,37 @@
 <template>
   <div class="m-login">
-    <h1>{{title}}</h1>
-
-    <mt-field label="用户名" placeholder="请输入用户名" v-model="userInfo.username" value="wench"></mt-field>
-    <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userInfo.userpwd" value="w111111"></mt-field>
-    <div class="m-help">
-      <router-link to="/about">忘记密码？</router-link>
-      <router-link to="/about">注册</router-link>
+    <div class="m-login-head">
+      <h1>{{title}}</h1>
+      <p>发现更大的世界</p>
     </div>
-    <mt-button type="primary" size="large" @click.native="login">登录</mt-button>
+    <div class="m-login-body">
+      <mt-field label="用户名" placeholder="请输入用户名" v-model="userInfo.username"></mt-field>
+      <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userInfo.userpwd"></mt-field>
+      <div class="m-help">
+        <router-link to="/about">忘记密码？</router-link>
+        <router-link to="/about">注册</router-link>
+      </div>
+      <mt-button type="primary" size="large" @click.native="login">登录</mt-button>
+    </div>
   </div>
 </template>
 
 <script>
 import { Toast } from "mint-ui";
-import { GetJsonpData } from "../api/jsonpData";
 import api from "@/api";
+import com from "@/api/common";
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
       title: "登陆",
       userInfo: {
-        username: "13528800028", //"wench",
-        userpwd: "w111111"
+        username: "15180000002",
+        userpwd: "aaaaaa"
       }
     };
   },
-  created() {
-    this.getList();
-  },
+  created() {},
   methods: {
     login() {
       var that = this;
@@ -37,13 +40,15 @@ export default {
         .get(api.account.login, {
           params: that.userInfo
         })
-        .then(function(res) {
+        .then(function(data) {
           console.log("请求成功！！！！");
-          console.log(res);
-          Toast({
-            message: "操作成功"
-          });
-          if (res.data.code == "999") {
+          console.log(data);
+          if (data.code == "999") {
+            //保存用户登录信息
+            com.setSession("loginUserBaseInfo", JSON.stringify(data.data));
+            Toast({
+              message: "登录成功"
+            });
             that.$router.push({
               path: "/home"
             });
@@ -54,15 +59,9 @@ export default {
           console.log("请求异常");
           console.log(error);
         });
-    },
-    //测试用
-    getList() {
-      //通过jsonp获取第三方接口数据
-      GetJsonpData().then(res => {
-        console.log(res);
-      });
     }
-  }
+  },
+  destroyed: function() {}
 };
 </script>
 

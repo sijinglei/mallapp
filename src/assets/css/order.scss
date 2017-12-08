@@ -1,0 +1,13 @@
+@import "minx";
+.active {
+    border-bottom: 2px solid $WtsColor;
+    /*no*/
+}
+
+.active .mint-tab-item-label {
+    color: $WtsColor;
+}
+
+.data-list {
+    padding: 0 16px;
+}

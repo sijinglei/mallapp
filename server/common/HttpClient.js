@@ -4,22 +4,27 @@ var base = require("./base");
 var HttpClient = {
     //资源请求入口
     Get: function(path, loginCookie, callback) {
+        var reqPath = path.indexOf("/") == 0 ? path.substring(1) : path;
         var options = this.ClientHeader(
-            base.apiConfig.apiBasePath + path.replace("/api", ""),
+            base.apiConfig.apiBasePath + path, //.replace("/api/", ""),
             loginCookie,
             "",
             "get"
         );
+        console.log(options);
         this.HttpGet(options, callback);
     },
 
     Post: function(path, loginCookie, reqData, callback) {
+        var reqPath = path.indexOf("/") == 0 ? path.substring(1) : path;
         var options = this.ClientHeader(
-            base.apiConfig.apiBasePath + path.replace("/api", ""),
+            base.apiConfig.apiBasePath + reqPath, //.replace("/api/", ""),
             loginCookie,
             reqData,
             "post"
         );
+        console.log("post请求头");
+        console.log(options);
         this.HttpPost(options, reqData, callback);
     },
     //登录注册请求入口
@@ -56,7 +61,7 @@ var HttpClient = {
                         }
                     });
                 } else if (res.statusCode == "401") {
-                    callback('{ "flag": -1, "msg": "拒绝访问","data":[] }');
+                    callback('{ "flag": -1, "message": "拒绝访问","data":[] }');
                 } else {
                     var str = "";
                     res.setEncoding("utf8");
@@ -68,15 +73,15 @@ var HttpClient = {
                             var obj = JSON.parse(str);
                             console.error(obj.error);
                             if (obj.error != undefined) {
-                                callback('{ "flag": 0, "msg": "' + obj.error + '" }');
+                                callback('{"code":"-1", "message": "' + obj.error + '" }');
                             } else if (obj.message != undefined) {
-                                callback('{ "flag": 0, "msg": "' + obj.message + '" }');
+                                callback('{"code":"-1", "message": "' + obj.message + '" }');
                             } else {
-                                callback('{ "flag": 0, "msg": "服务器异常" }');
+                                callback('{"code":"-1", "message": "服务器异常" }');
                             }
                         } catch (ex) {
                             console.error(ex);
-                            callback('{ "flag": 0, "msg": "服务器异常" }');
+                            callback('{"code":"-1", "message": "服务器异常" }');
                         }
                     });
                 }
@@ -84,7 +89,7 @@ var HttpClient = {
                     console.error(e);
                     console.log("problem with request: " + e.message);
                     if (callback) {
-                        callback('{ "flag": 0, "msg": "' + e.message + '" }');
+                        callback('{"code":"-1", "message": "' + e.message + '" }');
                     }
                 });
             });
@@ -123,7 +128,7 @@ var HttpClient = {
                         callback(res.headers, str);
                     });
                 } else if (res.statusCode == "401") {
-                    callback('{ "flag": -1, "msg": "拒绝访问","data":[] }');
+                    callback('{ "flag": -1, "message": "拒绝访问","data":[] }');
                 } else {
                     var str = "";
                     res.setEncoding("utf8");
@@ -135,15 +140,15 @@ var HttpClient = {
                             var obj = JSON.parse(str);
                             console.error(obj.error);
                             if (obj.error != undefined) {
-                                callback('{ "flag": 0, "msg": "' + obj.error + '" }');
+                                callback('{"code":"-1", "message": "' + obj.error + '" }');
                             } else if (obj.message != undefined) {
-                                callback('{ "flag": 0, "msg": "' + obj.message + '" }');
+                                callback('{"code":"-1", "message": "' + obj.message + '" }');
                             } else {
-                                callback('{ "flag": 0, "msg": "服务器异常" }');
+                                callback('{"code":"-1", "message": "服务器异常" }');
                             }
                         } catch (ex) {
                             console.error(ex);
-                            callback('{ "flag": 0, "msg": "服务器异常" }');
+                            callback('{"code":"-1", "message": "服务器异常" }');
                         }
                     });
                 }
@@ -151,7 +156,7 @@ var HttpClient = {
                     console.error(e);
                     console.log("problem with request: " + e.message);
                     if (callback) {
-                        callback('{ "flag": 0, "msg": "' + e.message + '" }');
+                        callback('{"code":"-1", "message": "' + e.message + '" }');
                     }
                 });
             });
@@ -176,10 +181,12 @@ var HttpClient = {
     HttpPost: function(options, reqData, callback) {
         try {
             var req = http.request(options, function(res) {
+                console.log("headers:", JSON.stringify(res.headers));
                 console.log("STATUS: " + res.statusCode);
                 if (res.statusCode == "200") {
                     var str = "";
                     res.setEncoding("utf8");
+
                     res.on("data", function(chunk) {
                         str += chunk;
                     });
@@ -187,7 +194,7 @@ var HttpClient = {
                         callback(str);
                     });
                 } else if (res.statusCode == "401") {
-                    callback('{ "flag": -1, "msg": "拒绝访问","data":[] }');
+                    callback('{ "flag": -1, "message": "拒绝访问","data":[] }');
                 } else {
                     var str = "";
                     res.setEncoding("utf8");
@@ -198,16 +205,16 @@ var HttpClient = {
                         try {
                             var obj = JSON.parse(str);
                             if (obj.error != undefined) {
-                                callback('{ "flag": 0, "msg": "' + obj.error + '" }');
+                                callback('{"code":"-1", "message": "' + obj.error + '" }');
                             } else if (obj.message != undefined) {
-                                callback('{ "flag": 0, "msg": "' + obj.message + '" }');
+                                callback('{"code":"-1", "message": "' + obj.message + '" }');
                             } else {
                                 console.error(obj.message);
-                                callback('{ "flag": 0, "msg": "服务器异常" }');
+                                callback('{"code":"-1", "message": "服务器异常" }');
                             }
                         } catch (ex) {
                             console.error(ex);
-                            callback('{ "flag": 0, "msg": "服务器异常" }');
+                            callback('{"code":"-1", "message": "服务器异常" }');
                         }
                     });
                 }
@@ -215,11 +222,13 @@ var HttpClient = {
             req.on("error", function(e) {
                 console.log("problem with request: " + e.message);
                 if (callback) {
-                    callback('{ "flag": 0, "msg": "' + e.message + '" }');
+                    callback('{"code":"-1", "message": "' + e.message + '" }');
                 }
             });
             req.write(reqData);
             req.end();
+
+            console.log(req);
         } catch (err) {
             console.log("catch异常");
             var errorMsg =
@@ -237,17 +246,20 @@ var HttpClient = {
     },
     //一般接口请求头
     ClientHeader: function(path, loginCookie, data, method) {
+        var _contentType = "application/json";
         var options = {
             host: base.apiConfig.host,
             port: base.apiConfig.port,
             path: path,
             method: method,
             headers: {
-                Cookie: loginCookie,
-                "content-type": "application/json",
-                "content-Length": Buffer.byteLength(data, "utf8")
+                "Content-Type": _contentType,
+                "Content-Length": Buffer.byteLength(data, "utf8")
             }
         };
+        if (loginCookie && loginCookie != "") {
+            options.headers.Cookie = loginCookie;
+        }
         return options;
     },
     //登录头
@@ -259,8 +271,8 @@ var HttpClient = {
             path: path,
             method: method,
             headers: {
-                "content-type": _contentType,
-                "content-Length": Buffer.byteLength(data, "utf8")
+                "Content-Type": _contentType,
+                "Content-Length": Buffer.byteLength(data, "utf8")
             }
         };
         return options;

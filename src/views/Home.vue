@@ -1,77 +1,101 @@
 <template>
-  <div class="m-home">
-    <h1>{{msg}}</h1>
-    <t-header></t-header>
-      <mt-button type="primary" size="large" @click.native="orderAdd">下订单</mt-button>
-      
-      <mt-button type="primary" size="large" @click.native="sendMobileCode">发送手机验证码</mt-button>
+
+  <div class="m-home" ref="home" id="home">
+    <!--head-->
+    <t-head  v-show="isHead"   :title="title" :menu-display="menuDisplay" :back-display="backDisplay" :map-display="mapDisplay" :carsLength="carsLength"></t-head>
+    <!--head-end-->
+    <section v-for="item in $store.state.home.malldata">
+       <!--banner-->
+      <section v-if="item.showStyleType==1">
+        <t-banner :imgs="item.infos" :auto="3666"></t-banner>
+      </section>
+      <!--banner end-->
+      <!---->
+      <section class="s-nav"  v-else-if="item.showStyleType>=2 && item.showStyleType<=5">
+        <div class="item" v-for="item in item.infos">
+          <div><img :src="item.imageUrl" :alt="item.title" /> </div>
+          <div>{{item.title}}</div>
+        </div>
+      </section>
+      <!---->
+      <section v-else>
+        <t-detail :infos="item"></t-detail>
+      </section>
+      <!---->
+    </section>
+    <t-tabar :selected="selected"></t-tabar>
   </div>
 </template>
 <script>
-import tHeader from "@/components/common/m-header";
 import api from "@/api";
+import  * as types from "@/store/types";
+import tBanner from '@/components/home/banner';//轮播
+import tHead from '@/components/common/head';
+import tDetail from '@/components/home/detail';//详情
+import tTabar from "@/components/common/tabar";
+import {mapState,mapActions} from 'vuex';
+
 export default {
+  components:{tBanner,'t-head':tHead,tDetail,tTabar},
   data() {
     return {
-      msg: "首页"
+      msg: "首页",
+      selected:'Home',
+      isHead:true,
+      menuDisplay:true,
+      backDisplay:true,
+      mapDisplay:true,
+      title:'首页',
+      allDate:[],
+      imgs:[],
+      carsLength:0,//购物车数量
     };
   },
-  components: {
-    tHeader
-  },
   mounted() {
-    // this.goodsCat();
+      var vm=this;
+      //获取购物车数量
+      vm.$axios.get(api.get,{
+          params:{
+            requrl:api.cart.count
+          }}).then((res)=>{
+              vm.carsLength=res.data;
+          }).catch((err)=>{
+           console.log(err.message)
+          })
+  },
+  created:function () {
+    this.getIndexDate(this);//获取首页数据
+
   },
   methods: {
-    goodsCat() {
-      var that = this;
-      that.$axios
-        .get(api.goods.catlist)
-        .then(data => {
-          console.log("获取列表成功！！！！");
-          console.log(data.data);
-          if (data.data.code != "999") {
-            that.msg = data.data.message;
-          } else {
-          }
-        })
-        .catch(error => {
-          console.log("请求异常");
-          console.log(error);
-        });
-    },
-    orderAdd() {
-      var that = this;
-      that.$axios
-        .post(api.order.add, {})
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.log("请求异常");
-          console.log(error);
-        });
-    },
-    sendMobileCode() {
-      var that = this;
-      that.$axios
-        .get(api.account.getmobilecode, {
-          params: {
-            mobile: "17665256879"
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.log("请求异常");
-          console.log(error);
-        });
-    }
+    ...mapActions({
+      getIndexDate:'HOME_DATA'
+    })
+  },
+  computed:{
+
   }
 };
 </script>
 
 <style scoped lang="scss">
+  @import "../assets/css/minx";
+  .m-home{
+    background-color: #f5f5f5;
+    .s-nav{
+      display: flex;
+      font-size: 14px;
+      background-color: #ffffff;
+      justify-content: space-around;
 
+      .item{text-align: center;
+        color: #666666;
+        img{
+          width:40px;height: 40px;
+          margin-top: 16px;
+          margin-bottom: 8px;
+        }}
+      padding-bottom: 16px;
+    }
+  }
 </style>

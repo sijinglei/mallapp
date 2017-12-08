@@ -1,0 +1,57 @@
+@import "minx";
+.mint-header {
+    background-color: #fff;
+    color: #333;
+}
+
+//单选按钮
+.mint-checkbox {}
+
+.mint-checkbox.is-right {
+    float: right;
+}
+
+.mint-checkbox-label {
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+.mint-checkbox-input {}
+
+.mint-checkbox-core {
+    width: 18px;
+    height: 18px;
+  border: 1px solid #ccc;/*no*/
+}
+
+.mint-checkbox-input:checked+.mint-checkbox-core {
+    background-color: $WtsColor;
+    border-color: $WtsColor;
+}
+
+.mint-checkbox-input:checked+.mint-checkbox-core::after {
+    border-color: #fff;
+    -webkit-transform: rotate(45deg) scale(1);
+    transform: rotate(45deg) scale(1);
+}
+
+.mint-checkbox-input[disabled]+.mint-checkbox-core {
+    background-color: #d9d9d9;
+    border-color: #ccc;
+}
+
+
+.btns{
+    padding: 0 16px;
+}
+.mint-button--primary {
+    color: #fff;
+    background-color: $WtsColor;
+}
+.font-del{
+    color: $WtsColor;
+}
+
+.mint-popup {
+    width: 100%;
+  }

@@ -1,0 +1,270 @@
+<template>
+  <section>
+    <mt-header :title="title">
+      <a @click="goBack" slot="left">
+        <mt-button icon="back">返回</mt-button>
+      </a>
+      <a slot="right" @click="delAddr()" class="font-del" v-show="isadd==2">
+        <mt-button icon="">删除</mt-button>
+      </a>
+    </mt-header>
+    <div class="form-box">
+      <mt-field label="收货人" placeholder="请输入收货人" v-model="postData.name"></mt-field>
+      <mt-field label="手机号码" placeholder="请输入手机号" type="tel" v-model="postData.mobile"></mt-field>
+      <a class="mint-cell mint-field">
+        <!---->
+        <div class="mint-cell-left"></div>
+        <div class="mint-cell-wrapper">
+          <div class="mint-cell-title">
+            <!---->
+            <span class="mint-cell-text">所在区域</span>
+            <!---->
+          </div>
+          <div class="mint-cell-value">
+            <span class="mint-field-core" v-model="addressInfo" v-text="addressInfo" @click="popupVisible=true"></span>
+          </div>
+          <!---->
+          <i class="mint-cell-allow-right"></i>
+        </div>
+      </a>
+      <mt-field label="详细地址" placeholder="详细地址" type="textarea" rows="4" v-model="postData.addr"></mt-field>
+      <!-- <a class="mint-cell mint-field">
+        <div class="mint-cell-left"></div>
+        <div class="mint-cell-wrapper">
+          <div class="mint-cell-title">
+            <span class="mint-cell-text">收货人</span>
+          </div>
+          <div class="mint-cell-value">
+            <input placeholder="请输入收货人" type="text" v-model="postData.name" class="mint-field-core">
+          </div>
+        </div>
+      </a>
+      <a class="mint-cell mint-field">
+        <div class="mint-cell-left"></div>
+        <div class="mint-cell-wrapper">
+          <div class="mint-cell-title">
+            <span class="mint-cell-text">手机号码</span>
+          </div>
+          <div class="mint-cell-value">
+            <input placeholder="请输入手机号码" type="mobile" v-model="postData.mobile" class="mint-field-core">
+          </div>
+        </div>
+      </a>
+      <a class="mint-cell mint-field">
+        <div class="mint-cell-left"></div>
+        <div class="mint-cell-wrapper">
+          <div class="mint-cell-title">
+            <span class="mint-cell-text">所在区域</span>
+          </div>
+          <div class="mint-cell-value">
+            <span class="mint-field-core" v-model="addressInfo" v-text="addressInfo" @click="popupVisible=true"></span>
+          </div>
+          <i class="mint-cell-allow-right"></i>
+        </div>
+      </a>
+      <a class="mint-cell mint-field is-textarea">
+        <div class="mint-cell-left"></div>
+        <div class="mint-cell-wrapper">
+          <div class="mint-cell-title">
+            <span class="mint-cell-text">详细地址</span>
+          </div>
+          <div class="mint-cell-value">
+            <textarea placeholder="详细地址" rows="4" class="mint-field-core" v-model="postData.addr" maxlength="100"></textarea>
+          </div>
+        </div>
+      </a> -->
+      <div class="mint-cell-wrapper" style="margin:17px 0;">
+        <div class="mint-cell-title">
+          <!---->
+          <label class="mint-checklist-label">
+            <span class="mint-checkbox">
+              <input type="checkbox" class="mint-checkbox-input" value="1" :checked="postData.defAddr">
+              <span class="mint-checkbox-core"></span>
+            </span>
+            <span class="mint-checkbox-label">设为默认地址</span>
+          </label>
+        </div>
+        <div class="mint-cell-value">
+          <span></span>
+        </div>
+        <!---->
+      </div>
+      <div class="btns">
+        <button class="mint-button mint-button--primary mint-button--large" @click="save">
+          <label class="mint-button-text">保存</label>
+        </button>
+      </div>
+    </div>
+    <mt-popup v-model="popupVisible" position="bottom" class="mint-popup-tk">
+      <check-area v-on:bindClose="popupVisible=false" v-on:bindSure="sureCheck"></check-area>
+    </mt-popup>
+
+    <mt-popup v-model="sheetVisible" popup-transition="popup-bottom" position="bottom">
+      <div class="sheetVisible">
+        <p class="text item">确定要删除所选商品吗？</p>
+        <div class="btn item" @click="isOk">确定</div>
+        <div class="cancel item" @click="sheetVisible=false">取消</div>
+      </div>
+    </mt-popup>
+  </section>
+</template>
+
+<script>
+import api from "@/api";
+import checkArea from "@/components/area/checkArea"; //选择城市组件
+import { Toast } from "mint-ui";
+export default {
+  data() {
+    return {
+      popupVisible: false,
+      sheetVisible: false, //是否
+      title: "新建地址",
+      isadd: 1, //1添加 2编辑
+      value: 1,
+      addressInfo: "省份、城市、区县", //所在区域
+      options: [
+        {
+          label: "设为默认地址",
+          value: 1
+        }
+      ],
+      postData: {
+        requrl: api.member.addaddress,
+        id: 0,
+        name: "", //收货人姓名
+        provinceId: "", //省份Id
+        cityId: "", //市Id
+        regionId: "", //县区Id
+        province: "", //省份名称
+        city: "", //市名称
+        region: "", //县区名称
+        addr: "", //详细地址
+        mobile: "", //手机号码
+        tel: "", //电话号码
+        zip: "", //邮政编码
+        shipaddressname: "", //别名
+        defAddr: 0 //是否设置为默认收货地址
+      },
+      provinceIds: [],
+      cityIds: [],
+      regionIds: [],
+      areaname: ""
+    };
+  },
+  created() {
+    var vm = this;
+    vm.postData.id = vm.$route.query.id || 0;
+    vm.isadd = vm.$route.query.isadd || 1;
+    vm.title = vm.isadd == 1 ? "新建地址" : "编辑收货地址";
+    vm.getAddressList(); //获取地址列表
+  },
+  mounted() {
+    var vm = this;
+    if (vm.postData.id != 0) {
+      vm.getInfo();
+    }
+  },
+  methods: {
+    sureCheck(strArea) {
+      console.log(strArea);
+      this.addressInfo = strArea.split("|")[1];
+      this.popupVisible = false;
+    },
+    getAddressList() {},
+    getInfo() {
+      var vm = this;
+      vm.$axios
+        .get(api.get, {
+          params: {
+            requrl: api.member.addressdetail,
+            memberAddressId: vm.postData.id
+          }
+        })
+        .then(res => {
+          console.log("获取详情");
+          let data = res.data;
+          if (res.code == "999") {
+            for (var k in vm.postData) {
+              if (k !== "requrl") {
+                vm.postData[k] = data[k];
+              }
+            }
+          }
+          console.log(vm.postData);
+        });
+    },
+    save() {
+      var vm = this;
+      vm.$axios.post(api.post, vm.postData).then(res => {
+        console.log("新增成功");
+        console.log(res);
+      });
+    },
+    delAddr() {
+      this.sheetVisible = true;
+    },
+    isOk() {
+      var vm = this;
+      vm.$axios
+        .post(api.post, {
+          requrl: api.member.addressdelete,
+          id: vm.postData.id
+        })
+        .then(res => {
+          vm.sheetVisible = true;
+          if ((res.code = "999")) {
+            Toast({
+              message: "操作成功",
+              position: "bottom"
+            });
+            this.goBack();
+          }
+        });
+    },
+    goBack() {
+      this.$router.go(-1);
+    }
+  },
+
+  components: { checkArea }
+};
+</script>
+<style lang="scss" scoped>
+@import "../../../assets/css/global";
+.form-box {
+  margin-top: 10px;
+  input {
+    font-size: 16px;
+  }
+}
+.mint-field {
+  border-bottom: 1px solid #d9d9d9;
+  .mint-cell-wrapper {
+    font-size: 16px;
+  }
+}
+.sheetVisible {
+  background-color: #f5f5f5;
+  .item {
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    background-color: #ffffff;
+    &.btn {
+      color: #fe3824;
+      font-size: 16px;
+    }
+    &.cancel {
+      margin-top: 9px;
+      color: #333333;
+      font-size: 16px;
+    }
+    &.text {
+      border-bottom: 1px solid #f3f3f3; /*no*/
+      font-size: 12px;
+      color: #999999;
+    }
+  }
+}
+</style>

@@ -1,10 +1,6 @@
-//基础font-size
-$font: 16;
-//设计稿宽度
-$screen: 750;
-//主色
-$bColor: #f9696c;
+$bColor: #f969c6;
 $fontC: #666;
-@function px2rem($n) {
-    @return #{$n/($screen*$font/320)}rem;
-}
+$font: 16px;
+//梧桐树项目主体色
+//按钮背景，选中背景，选项卡已选颜色
+$WtsColor: #42bd56;
