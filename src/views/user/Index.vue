@@ -2,18 +2,18 @@
   <div class="mine-wrap">
     <div class="person">
 
-         <router-link to="/login" v-show="userinfo.nickname==''">
-           <div class="photo">
-           <img src="../../assets/images/head.png" alt="">
-           </div>
-           <p class="name">登录账号</p>
-        </router-link>
-         <router-link to="/center" v-show="userinfo.nickname!=''">
-           <div class="photo">
-           <img src="../../assets/images/head.png" alt="">
-           </div>
-           <p class="name">{{userinfo.nickname}}</p>
-        </router-link>
+      <router-link to="/login" v-show="userinfo.nickname==''">
+        <div class="photo">
+          <img src="../../assets/images/head.png" alt="">
+        </div>
+        <p class="name">登录账号</p>
+      </router-link>
+      <router-link to="/center" v-show="userinfo.nickname!=''">
+        <div class="photo">
+          <img src="../../assets/images/head.png" alt="">
+        </div>
+        <p class="name">{{userinfo.nickname}}</p>
+      </router-link>
     </div>
     <mt-cell title="租赁信用认证" to="/" is-link :value="caStatusDescribe">
     </mt-cell>
@@ -21,38 +21,38 @@
       <span style="color: green"></span>
     </mt-cell>
 
-    <mt-cell title="租赁订单" is-link to="leaseorder/2/0">
+    <mt-cell title="租赁订单" is-link to="orderlist/2/0">
     </mt-cell>
     <div class="mint-cell cell-group">
       <a href="javascript:;"></a>
-      <router-link to="leaseorder/2/1">
+      <router-link to="orderlist/2/1">
         <span class="icon-wrap">
           <i class="icon icon-payment"></i>
-            <span class="cnt" v-show="leasePendingAmount>0">{{leasePendingAmount}}</span>
+          <span class="cnt" v-show="leasePendingAmount>0">{{leasePendingAmount}}</span>
         </span>
         <span class="link-txt">待付款</span>
       </router-link>
-      <router-link to="leaseorder/2/3">
+      <router-link to="orderlist/2/3">
         <span class="icon-wrap">
           <i class="icon icon-waittake"></i>
-            <span class="cnt" v-show="leaseReceivedAmount>0">{{leaseReceivedAmount}}</span>
+          <span class="cnt" v-show="leaseReceivedAmount>0">{{leaseReceivedAmount}}</span>
         </span>
         <span class="link-txt">待收货</span>
       </router-link>
-      <router-link to="leaseorder/2/4">
+      <router-link to="orderlist/2/4">
         <span class="icon-wrap">
           <i class="icon icon-complete"></i>
-            <span class="cnt" v-show="false"></span>
+          <span class="cnt" v-show="false"></span>
         </span>
         <span class="link-txt">已完成</span>
       </router-link>
       <a href="javascript:;"></a>
     </div>
-    <mt-cell title="普通订单" is-link to="/leaseorder/1/0">
+    <mt-cell title="普通订单" is-link to="/orderlist/1/0">
     </mt-cell>
     <div class="mint-cell cell-group">
       <a href="javascript:;"></a>
-      <router-link to="/leaseorder/1/1">
+      <router-link to="/orderlist/1/1">
         <span class="icon-wrap">
           <i class="icon icon-payment"></i>
           <span class="cnt" v-show="pendingAmount>0">{{pendingAmount}}</span>
@@ -60,17 +60,17 @@
         <span class="link-txt">待付款
         </span>
       </router-link>
-      <router-link to="/leaseorder/1/3">
+      <router-link to="/orderlist/1/3">
         <span class="icon-wrap">
           <i class="icon icon-waittake"></i>
-            <span class="cnt" v-show="receivedAmount>0">{{receivedAmount}}</span>
+          <span class="cnt" v-show="receivedAmount>0">{{receivedAmount}}</span>
         </span>
         <span class="link-txt">待收货</span>
       </router-link>
-      <router-link to="/leaseorder/1/4">
+      <router-link to="/orderlist/1/4">
         <span class="icon-wrap">
           <i class="icon icon-complete"></i>
-            <span class="cnt" v-show="false"></span>
+          <span class="cnt" v-show="false"></span>
         </span>
         <span class="link-txt">已完成</span>
       </router-link>
@@ -87,7 +87,7 @@
     <mt-cell title="设置" is-link to="/setting">
     </mt-cell>
 
-       <t-tabar :selected="selected"></t-tabar>
+    <t-tabar :selected="selected"></t-tabar>
   </div>
 </template>
 
@@ -133,20 +133,15 @@ export default {
         })
         .then(res => {
           console.log(res);
-          if ((res.code = "999")) {
-            var data = res.data;
-            vm.memberId = data.member_id;
-            vm.caStatus = data.caStatus;
-            vm.caStatusDescribe = data.caStatusDescribe;
-            vm.couponAmount = data.couponAmount;
-            vm.leasePendingAmount = data.leasePendingAmount;
-            vm.leaseReceivedAmount = data.leaseReceivedAmount;
-            vm.pendingAmount = data.pendingAmount;
-            vm.receivedAmount = data.receivedAmount;
-          }
-        })
-        .catch(err => {
-          console.log(err);
+          var data = res.data;
+          vm.memberId = data.member_id;
+          vm.caStatus = data.caStatus;
+          vm.caStatusDescribe = data.caStatusDescribe;
+          vm.couponAmount = data.couponAmount;
+          vm.leasePendingAmount = data.leasePendingAmount;
+          vm.leaseReceivedAmount = data.leaseReceivedAmount;
+          vm.pendingAmount = data.pendingAmount;
+          vm.receivedAmount = data.receivedAmount;
         });
     }
   },
@@ -197,7 +192,7 @@ export default {
 }
 .icon {
   color: #333;
-  font-size: 24px;
+  font-size: 24px; /*no*/
 }
 .mint-cell {
   margin-bottom: 10px;
@@ -219,26 +214,26 @@ export default {
     text-align: center;
     .icon-wrap {
       display: block;
-      width: 30px;
-      height: 20px;
+      width: 30px; /*no*/
+      height: 20px; /*no*/
       margin: 5px auto;
       position: relative;
       .cnt {
         position: absolute;
-        width: 18px;
-        height: 18px;
-        line-height: 18px;
+        width: 18px; /*no*/
+        height: 18px; /*no*/
+        line-height: 18px; /*no*/
         background-color: red;
         border-radius: 50%;
         color: #fff;
-        font-size: 8px;
+        font-size: 10px; /*no*/
         text-align: center;
-        top: -2px;
-        right: -2px;
+        top: -2px; /*no*/
+        right: -2px; /*no*/
       }
     }
     .link-txt {
-      font-size: 14px;
+      font-size: 14px; /*no*/
       color: #333;
     }
   }

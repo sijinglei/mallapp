@@ -10,7 +10,7 @@
     </mt-header>
     <div class="form-box">
       <mt-field label="收货人" placeholder="请输入收货人" v-model="postData.name"></mt-field>
-      <mt-field label="手机号码" placeholder="请输入手机号" type="tel" v-model="postData.mobile"></mt-field>
+      <mt-field label="手机号码" placeholder="请输入手机号" type="tel" v-model="postData.mobile" :attr="{ maxlength: 11}"></mt-field>
       <a class="mint-cell mint-field">
         <!---->
         <div class="mint-cell-left"></div>
@@ -27,7 +27,7 @@
           <i class="mint-cell-allow-right"></i>
         </div>
       </a>
-      <mt-field label="详细地址" placeholder="详细地址" type="textarea" rows="4" v-model="postData.addr"></mt-field>
+      <mt-field label="详细地址" placeholder="详细地址" type="textarea" rows="4" v-model="postData.addr" :attr="{ maxlength: 50 }"></mt-field>
       <!-- <a class="mint-cell mint-field">
         <div class="mint-cell-left"></div>
         <div class="mint-cell-wrapper">
@@ -78,7 +78,7 @@
           <!---->
           <label class="mint-checklist-label">
             <span class="mint-checkbox">
-              <input type="checkbox" class="mint-checkbox-input" value="1" :checked="postData.defAddr">
+              <input type="checkbox" class="mint-checkbox-input" value="1" v-model="postData.defAddr" :checked="postData.defAddr">
               <span class="mint-checkbox-core"></span>
             </span>
             <span class="mint-checkbox-label">设为默认地址</span>
@@ -102,7 +102,7 @@
     <mt-popup v-model="sheetVisible" popup-transition="popup-bottom" position="bottom">
       <div class="sheetVisible">
         <p class="text item">确定要删除所选商品吗？</p>
-        <div class="btn item" @click="isOk">确定</div>
+        <div class="btn item" @click="deleteOk">确定</div>
         <div class="cancel item" @click="sheetVisible=false">取消</div>
       </div>
     </mt-popup>
@@ -145,10 +145,7 @@ export default {
         shipaddressname: "", //别名
         defAddr: 0 //是否设置为默认收货地址
       },
-      provinceIds: [],
-      cityIds: [],
-      regionIds: [],
-      areaname: ""
+      errMsg: ""
     };
   },
   created() {
@@ -165,9 +162,20 @@ export default {
     }
   },
   methods: {
+    setDefaltAddr() {
+      alert(this.postData.defAddr);
+    },
     sureCheck(strArea) {
-      console.log(strArea);
+      let addressIds = strArea.split("|")[0].split("-");
+      let addressNames = strArea.split("|")[1].split("-");
       this.addressInfo = strArea.split("|")[1];
+      this.postData.provinceId = addressIds[0];
+      this.postData.cityId = addressIds[1];
+      this.postData.regionId = addressIds[2];
+
+      this.postData.province = addressNames[0];
+      this.postData.city = addressNames[1];
+      this.postData.region = addressNames[2];
       this.popupVisible = false;
     },
     getAddressList() {},
@@ -181,7 +189,6 @@ export default {
           }
         })
         .then(res => {
-          console.log("获取详情");
           let data = res.data;
           if (res.code == "999") {
             for (var k in vm.postData) {
@@ -189,21 +196,67 @@ export default {
                 vm.postData[k] = data[k];
               }
             }
+
+            vm.addressInfo =
+              vm.postData.province +
+              "-" +
+              vm.postData.city +
+              "-" +
+              vm.postData.region;
           }
           console.log(vm.postData);
         });
     },
     save() {
       var vm = this;
-      vm.$axios.post(api.post, vm.postData).then(res => {
-        console.log("新增成功");
-        console.log(res);
-      });
+      if (vm.isOk()) {
+        vm.$axios.post(api.post, vm.postData).then(res => {
+          if (res.code == "999") {
+            Toast({
+              message: "新增成功",
+              position: "bottom"
+            });
+            vm.goBack();
+          }
+        });
+      } else {
+        Toast({
+          message: vm.errMsg,
+          position: "bottom"
+        });
+      }
+    },
+    isOk() {
+      let vm = this,
+        d = vm.postData,
+        errCom = "不能为空";
+      var regTel = /^0?1[3|4|5|7|8][0-9]\d{8}$/;
+      if (d.name == "") {
+        vm.errMsg = `收货人${errCom}`;
+        return false;
+      }
+      if (d.mobile == "") {
+        vm.errMsg = `电话号码${errCom}`;
+        return false;
+      }
+      if (d.province == "") {
+        vm.errMsg = `所在区域${errCom}`;
+        return false;
+      }
+      if (d.addr == "") {
+        vm.errMsg = `详细地址${errCom}`;
+        return false;
+      }
+      if (d.mobile != "" && !regTel.test(d.mobile)) {
+        vm.errMsg = "手机号码格式不正确";
+        return false;
+      }
+      return true;
     },
     delAddr() {
       this.sheetVisible = true;
     },
-    isOk() {
+    deleteOk() {
       var vm = this;
       vm.$axios
         .post(api.post, {
@@ -225,7 +278,11 @@ export default {
       this.$router.go(-1);
     }
   },
-
+  watch: {
+    "postData.defAddr"(val, oldval) {
+      this.postData.defAddr = val ? 1 : 0;
+    }
+  },
   components: { checkArea }
 };
 </script>

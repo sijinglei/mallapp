@@ -11,12 +11,16 @@ const store = {
   state: {
     carslist: {},
     popupVisible:false,
+    productDate:{}
   },
   getters: {},
   mutations: {
     [types.CAR_EDIT](state,payload){
       state.carslist=payload;
-    }
+    },
+    [types.PRODUCTDATE](state,payload){
+      state.productDate=payload;
+    },
   },
   actions: {
 

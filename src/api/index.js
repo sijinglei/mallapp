@@ -7,7 +7,8 @@ module.exports = {
         getmobilecode: "user/mobilecode"
     },
     area: {
-        list: "area/getlist" //获取区域下拉框 (省/市/县区)
+        list: "area/getlist", //获取区域下拉框 (省/市/县区)
+        tree: "area/tree"
     },
     //商品
     goods: {

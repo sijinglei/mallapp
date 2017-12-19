@@ -1,10 +1,13 @@
 import Coupon from "@/views/user/coupon";
-import Productlist from "@/views/Productlist";
-import Category from "@/views/Category";
+import Productlist from "@/views/CateGory/Productlist";
+import Category from "@/views/CateGory/Category";
 import HelpCenter from "@/views/Help/HelpCenter";
 import HelpList from "@/views/Help/HelpList";
 import HelpDetail from "@/views/Help/HelpDetail";
-
+import MessageCenter from "@/views/Message/MessageCenter";
+import ServiceInfo from "@/views/Message/ServiceInfo";
+import SystemInfo from "@/views/Message/SystemInfo";
+import InfoDetail from "@/views/Message/InfoDetail";
 var RouterLei = [
   {
     path: "/coupon",
@@ -32,9 +35,29 @@ var RouterLei = [
     component: HelpList
   },
   {
-    path: "/helpDetail",
-    name: "helpDetail", //帮助详细
+    path: "/helpetail",
+    name: "helpetail", //帮助详细
     component: HelpDetail
+  },
+  {
+    path: "/messagecenter",
+    name: "messagecenter", //消息中心
+    component: MessageCenter
+  },
+  {
+    path: "/serviceinfo",
+    name: "serviceinfo", //服务消息
+    component: ServiceInfo
+  },
+  {
+    path: "/systeminfo",
+    name: "systeminfo", //系统消息
+    component: SystemInfo
+  },
+  {
+    path: "/infodetail",
+    name: "infodetail", //消息详情
+    component: InfoDetail
   },
 ];
 export default RouterLei;

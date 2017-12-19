@@ -3,6 +3,18 @@
     background-color: #fff;
     color: #333;
 }
+.mint-toast{z-index: 4000!important;}
+img{
+    object-fit: cover;
+}
+.ellipsis{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+i{
+    font-style:normal;
+}
 
 //单选按钮
 .mint-checkbox {}
@@ -55,3 +67,22 @@
 .mint-popup {
     width: 100%;
   }
+  .btn {
+    border: 1px solid #999999; /*no*/
+    border-radius: 2px;
+    font-size: 14px;
+    color: #999;
+    letter-spacing: 0.17px;
+    padding: 5px 17px;
+  }
+  .btn-default {
+    border: 1px solid #999999;
+  }
+  .btn-danger {
+    border: 1px solid $WtsColor;
+    color: #fff;
+    background: $WtsColor;
+  }
+::-webkit-scrollbar{
+  display:none;
+}

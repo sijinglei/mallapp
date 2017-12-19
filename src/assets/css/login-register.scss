@@ -1,4 +1,5 @@
 @import "minx";
+@import "global";
 .m-help {
     width: 100%;
     padding: 5px 15px;
@@ -19,7 +20,7 @@
 .m-login{
   .m-login-head{width: 100%;
     height: 108px;
-     background-color: #0f88eb;
+     background-color: $WtsColor;
     color: #FFFFFF;
     text-align: center;
     padding-top: 50px;

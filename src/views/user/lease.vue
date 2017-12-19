@@ -24,33 +24,33 @@
             <div class="mint-tab-item-label">已结束</div>
           </a>  -->
     </div>
-    <div class="mint-tab-container-wrap">
+    <div class="lease-order-list">
       <div class="item" v-for="item in leaselist">
         <div class="item-head">
-          <span class="left number">订单编号：11977240</span>
-          <span class="right deadline">本期使用剩余：28天</span>
+          <span class="left number">订单编号：{{item.sn}}</span>
+          <span class="right deadline">本期使用剩余：{{item.surplusDay}}天</span>
         </div>
-        <div class="item-body">
+        <div class="item-body" @click="$router.push({path:'/leasedetail',query:{sn:item.sn}})">
           <div class="img">
-            <img src="https://isofficepublic-test.oss-cn-shenzhen.aliyuncs.com/mall/img/fec77bc14d2d4201b685d940836d1671.png" alt="">
+            <img :src="item.img" alt="">
           </div>
           <div class="content">
-            <div class="title">西泠印社 寿山芙蓉石 篆刻印章石料章料 博古 长方章</div>
-            <div class="txt1 spec">规格：64G</div>
-            <div class="txt1 service">服务说明</div>
-            <div class="txt2 rent">月租：￥122.00</div>
-            <div class="txt2 start-time">起租时间：2017-10-29</div>
-            <div class="txt2 end-time">结束时间：2017-10-29</div>
+            <div class="title">{{item.name}}</div>
+            <div class="txt1 spec">规格：{{item.specs}}</div>
+            <div class="txt1 service">服务说明：{{item.serviceList}}</div>
+            <div class="txt2 rent">月租：￥{{item.salePrice}}</div>
+            <div class="txt2 start-time">起租时间：{{item.startDate}}</div>
+            <div class="txt2 end-time">结束时间：{{item.endDate}}</div>
           </div>
         </div>
         <div class="item-foot">
-          <span>共1件，租期：1个月，总租金额：¥122.00</span>
+          <span>共1件，租期：{{item.leaseMonth}}个月，总租金额：¥{{item.totalPay||0}}</span>
         </div>
         <div class="item-link-btn">
-          <router-link to="">订单待还详情</router-link>
+          <a @click="$router.push({path:'/leasedetail',query:{sn:item.sn}})">订单待还详情</a>
         </div>
       </div>
-      <t-empty :is-show="leaselist.length == 0" :empty-text="emptyText" :empty-text2="emptyText2" :link-url="linkUrl" :img-type="1"></t-empty>
+      <t-empty :is-show="leaseLen == 0" :empty-text="emptyText" :empty-text2="emptyText2" :link-url="linkUrl"></t-empty>
     </div>
   </div>
 </template>
@@ -64,12 +64,17 @@ export default {
       emptyText: "暂无租赁记录",
       emptyText2: "去看看您想要租用的商品吧",
       linkUrl: "/home",
+      leaselist: [],
       currentType: 1,
-      leaselist: []
+      leaseLen: 0,
+      services: "" //服务说明
     };
   },
-  mounted() {
+  created() {
     this.getleaseList();
+  },
+  mounted() {
+    var vm = this;
   },
   methods: {
     changeTab(type) {
@@ -83,19 +88,31 @@ export default {
         .get(api.get, {
           params: {
             requrl: api.order.leaselist,
-            periodType: vm.currentType
+            periodType: vm.currentType,
+            pageIndex: 1,
+            pageSize: 100
           }
         })
-        .then(data => {
-          console.log("获取租赁信息");
-          console.log(data);
-          if ((data.code = "999")) {
-            vm.leaselist = data.list;
+        .then(res => {
+          console.log(res);
+          let list = res.data.list;
+          vm.leaselist = list;
+          vm.leaseLen = list.length;
+          if (list.length > 0) {
+            list.forEach(e => {
+              vm.$set(e, "serviceList", vm.getServices(e.serviceList));
+            });
           }
-        })
-        .catch(err => {
-          console.log(err);
         });
+    },
+    getServices(serviceList) {
+      var vm = this;
+      if (serviceList && serviceList.length > 0) {
+        serviceList.forEach(e => {
+          vm.services += "," + e.serviceName;
+        });
+      }
+      return vm.services.substring(1);
     }
   },
   components: {
@@ -106,90 +123,96 @@ export default {
 
 <style scoped lang="scss" >
 @import "../../assets/css/order";
-@import "../../assets/css/minx";
-.mint-header {
-  background-color: $WtsColor;
-}
-.item {
-  margin-top: 10px;
-  color: $fontC;
-  &-head,
-  &-foot,
-  &-link-btn {
-    border: 1px solid #eee;
-    border-left: none;
-    border-right: none;
-  }
-  &-body {
-    display: flex;
-    background-color: #fff;
-
-    padding: 0 16px;
-    height: 200px;
-    .img {
+.lease-order-list {
+  .item {
+    margin-top: 10px;
+    color: $fontC;
+    &-head,
+    &-foot,
+    &-link-btn {
+      border: 1px solid #eee;
+      border-left: none;
+      border-right: none;
+    }
+    &-body {
       display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    img {
-      width: 72px;
-      height: 72px;
-    }
-    .content {
-      margin-left: 8px;
-      flex: 1;
-      padding: 16px 0;
-      > div {
+      background-color: #fff;
+
+      padding: 0 16px;
+      height: 200px;
+      .img {
+        display: flex;
+        justify-content: center;
+        margin-top: 8px;
+      }
+      img {
+        width: 72px;
+        height: 72px;
+      }
+      .content {
+        flex: 1;
+        padding: 8px;
         color: #333;
-        line-height: 24px;
+        > div {
+          line-height: 24px;
+        }
+        .title {
+          font-size: 14px; /*no*/
+          color: inherit;
+        }
+        .txt1 {
+          font-size: 12px;
+          color: #999;
+          letter-spacing: 0;
+          line-height: 18px;
+        }
+        .service {
+          max-height: 72px;
+          overflow: hidden;
+        }
       }
-      .title {
-        font-size: 16px;
-        color: inherit;
-      }
-      .txt1 {
+    }
+    &-head {
+      display: flex;
+    }
+    &-head,
+    &-foot,
+    &-link-btn {
+      height: 40px;
+      line-height: 40px;
+      background-color: #fff;
+      padding: 0 16px;
+      > span {
         font-size: 12px;
-        color: #999;
-        letter-spacing: 0;
-        line-height: 18px;
+      }
+      .right {
+        flex: 1;
+      }
+      .left {
+        width: 60%;
+      }
+      span.right {
+        text-align: right;
+        color: #666;
       }
     }
-  }
-  &-head {
-    display: flex;
-  }
-  &-head,
-  &-foot,
-  &-link-btn {
-    height: 40px;
-    line-height: 40px;
-    background-color: #fff;
-    padding: 0 16px;
-    > span {
-      flex: 1;
-      font-size: 12px;
-    }
-    span.right {
+    &-foot {
       text-align: right;
-      color: #666;
     }
-  }
-  &-foot {
-    text-align: right;
-  }
-  &-link-btn {
-    border-top: none;
-    text-align: right;
-    a {
-      text-align: center;
-      border: 1px solid #999999;
-      border-radius: 2px;
-      height: 30px;
-      line-height: 30px;
-      padding: 5px 17px;
-      margin-top: 5px;
-      font-size: 14px;
-      color: #999999;
+    &-link-btn {
+      border-top: none;
+      text-align: right;
+      a {
+        text-align: center;
+        border: 1px solid #999999;
+        border-radius: 2px;
+        height: 30px;
+        line-height: 30px;
+        padding: 5px 17px;
+        margin-top: 5px;
+        font-size: 14px;
+        color: #999999;
+      }
     }
   }
 }

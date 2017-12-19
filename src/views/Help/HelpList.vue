@@ -7,9 +7,9 @@
       </mt-header>
 
       <div class="content">
-        <span class="min-title">{{list[0].typeName}}</span>
+        <span class="min-title">{{typeName}}</span>
         <template  v-for="item in list">
-          <mt-cell :title="item.name" isLink="" :to="{path:'/helpdetail',query:{id:item.id}}"></mt-cell>
+          <mt-cell :title="item.name" isLink="" :to="{path:'/helpdetail',query:{id:item.id,typeName:typeName}}"></mt-cell>
         </template>
       </div>
     </div>
@@ -19,6 +19,7 @@ import api from "@/api";
     export default {
         data() {
             return {
+              typeName:'',
               params:{
                 requrl:api.my.helpcenter,
                 pageIndex:1,
@@ -31,7 +32,8 @@ import api from "@/api";
        created(){
           var vm=this;
            vm.params.typeId=vm.$route.query.id;
-         },
+         console.log(vm.params.typeId);
+       },
         methods: {
           goBack () {
             this.$router.go(-1);
@@ -42,6 +44,7 @@ import api from "@/api";
               if(data.code == '999'){
                 var thisList = data.data.list;
                 that.list=thisList;
+                that.typeName = that.list[0].typeName;
               }
             })
           }

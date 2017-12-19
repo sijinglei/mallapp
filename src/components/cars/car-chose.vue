@@ -7,16 +7,41 @@
     </div>
     <div class="normd">
       <div class="normdlist-box">
-        <div  class="normdlist" v-for="(spec,cindex) in carDate.detail.specVoList">
-          <p class="tit">{{spec.name}}</p>
-          <div class="item " v-for="(ms,msindex) in spec.specValueVoList">
-            <span class=" rk" :class="{'backtheme':ms.isActive}" @click="changeSpecs(cindex,ms.id)">{{ms.name}}</span>
+        <div class="bot-b">
+          <div  class="normdlist" v-for="(spec,cindex) in carDate.detail.specVoList">
+            <p class="tit">{{spec.name}}</p>
+            <div class="item " v-for="(ms,msindex) in spec.specValueVoList">
+              <span class=" rk" :class="{'backtheme':ms.isActive}" @click="changeSpecs(cindex,ms.id)">{{ms.name}}</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="snub">数量
-
+       <div class="mor-box">
+         <div class="snub bot-b">数量
         <t-chose :data="carDate.cardata" :index="nubIndex" ></t-chose>
+         </div>
+       </div>
+
+      <div class="normdlist-box" v-if="carDate.detail.tenancy!=''">
+        <div class="bot-b">
+          <p class="tit">租期</p>
+          <div class="item " v-for="(item,index) in tenancyId">
+            <span class=" rk" @click="leaseMonth=index" :class="{'backtheme':index==leaseMonth}">{{item}}个月</span>
+          </div>
+        </div>
+      </div>
+      <div class="mor-box">
+        <p class="volist-tit">服务</p>
+        <div class="volist-content" v-for="(item,index) in carDate.detail.vasTypeVoList">
+          <p class="center">{{item.name}}</p>
+          <div v-for="(citem,cindex) in item.goodsVasVoList" >
+            <div class="volist-box" @click="checkType(citem,index)">{{citem.vasTypeName}} | ¥{{citem.cost}} ({{citem.isCheck | isCheck}}) <span
+              class="mint-checkbox">
+                  <input type="checkbox" class="mint-checkbox-input" value="optionA" :checked="citem.isChecked || citem.isCheck">
+                   <span class="mint-checkbox-core"></span>
+                </span></div>
+          </div>
+        </div>
       </div>
       <a class="btn active" v-if="enable==0">无货</a>
       <a v-else class="btn" @click="postDate">确定</a>
@@ -39,6 +64,7 @@
               nubIndex:JSON.parse(localStorage.getItem('CAR_EDIT')).index,//index
               //购物车给过来的数据{id:当前商品id,detail:当前商品详情,postdata:购物车上传数据,cardata:购物车列表数据,index:当前商品在购物车的索引}
               carDate:JSON.parse(localStorage.getItem('CAR_EDIT')),
+              leaseMonth:0//租期初始值 index
               //productVoList 各类规格商品
             }
         },
@@ -72,7 +98,7 @@
                   vm.$set(valItem,'isActive',false);
                 })
               });
-              console.log(specsids);
+
               this.carDate.detail.specVoList.forEach((item)=>{
                 item.specValueVoList.forEach((valItem,index)=>{
                   specsids.forEach((idsItem)=>{
@@ -83,6 +109,23 @@
                 })
               })
             },
+      checkTypeMe(index){
+        let vm=this;
+        this.carDate.detail.vasTypeVoList[index].goodsVasVoList.forEach((item)=>{
+          if(item.isChecked){
+            vm.$set(item,'isChecked',false)
+          }
+        })
+      },
+      checkType(item,index){
+        if(item.isChecked){
+          item.isCheck==1?this.checkTypeMe(index)&&this.$set(item,'isChecked',true):item.isChecked==true?this.$set(item,'isChecked',false):this.checkTypeMe(index)&&this.$set(item,'isChecked',true)
+        }else {
+          this.checkTypeMe(index);
+          this.$set(item,'isChecked',true);
+
+        }
+      },
 
           nubSub(index){
             if(this.carDate.cardata[index].num<=1){
@@ -157,6 +200,15 @@
         mounted: function () {
 
         },
+        filters:{
+          isCheck(val){
+            if(val=='1'){
+              return '必选'
+            }else{
+              return '可选'
+            }
+          }
+        },
         computed:{
           imgUrl(){
               //图片
@@ -189,6 +241,23 @@
             var enable=this.getSp('enableStore');
              return enable
 
+          },
+          tenancyId(){
+            //租期
+            if(this.carDate.detail.tenancy!=''){
+              return this.carDate.detail.tenancy.split(',')
+            }
+          },
+          serviceIds(){
+            let arr=[];
+            this.carDate.detail.vasTypeVoList.forEach((item)=>{
+              item.goodsVasVoList.forEach((citem)=>{
+                if(citem.isChecked==true || citem.isCheck){
+                  arr.push(citem.id)
+                }
+              })
+            });
+            return arr;
           }
 
         },
@@ -229,6 +298,8 @@
     }
     .normd{
       height:313px ;
+      padding-bottom: 50px;/*no*/
+      overflow-y: auto;
       .btn{height: 48px;background-color: $WtsColor ;line-height: 48px;text-align: center;font-size:16px; display: block;position: absolute;left: 0;bottom: 0;width: 100%;color: #ffffff;
          &.active{
         background-color:#B3E5BB!important;
@@ -239,7 +310,7 @@
         padding: 0 0 8px 0;
       }
       .item{
-        display: inline-block;margin-right:16px ;
+        display: inline-block;margin-right:16px ;margin-bottom:8px ;
         &.active{
           border: 1px solid #FF9A00;
           color: #FF9A00;
@@ -275,17 +346,43 @@
     .normdlist-box{
       padding:  8px 16px 0 16px;
       overflow-y: auto;
-      border-bottom: 1px solid #f5f5f5;/*no*/
-      max-height: 160px;
-      min-height: 140px;
       .normdlist{
         padding-bottom: 8px;
 
       }
     }
 
-    .snub{margin-top: 8px;
-      padding: 0 16px;
-      display: flex;justify-content: space-between}
+    .snub{
+      display: flex;justify-content: space-between; padding-bottom: 11px; }
   }
+  .volist-content{
+    .center{
+      font-size: 14px;
+      color: #999999;
+      padding: 8px 0;
+      text-align: center;
+    }
+    .volist-box{
+      width: 100%;
+      height: 48px;
+      border: 1px solid #c7c7cd;border-radius: 4px;
+      line-height: 48px;
+      text-align: center;
+      font-size: 14px;color: #333333;
+      margin-bottom: 8px;
+      position: relative;
+      .mint-checkbox-core{
+        position: absolute;
+        right: 16px;
+        top: 16px;
+      }
+    }
+  }
+  .volist-content{
+    margin-bottom: 8px;
+  }
+  .mor-box{
+    padding:  11px 16px 0 16px;
+  }
+  .bot-b{border-bottom: 1px solid #f0f0f0;/*no*/width: 100%}
 </style>

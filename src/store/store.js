@@ -7,6 +7,7 @@ import common from "./modules/common";
 import home from "./modules/home";
 import order from "./modules/order";
 import cars from "./modules/cars";
+import product from "./modules/product";
 
 Vue.use(Vuex);
 
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
         common,
         home,
         order,
-       cars
+       cars,
+      product
     }
 });
 

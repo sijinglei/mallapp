@@ -1,9 +1,19 @@
-@import "minx";
+@import 'global';
+.fixd-head{
+    position: fixed;
+    width: 100%;
+    z-index: 11;
+}
 .active {
     border-bottom: 2px solid $WtsColor;
     /*no*/
 }
-
+.nodata{
+    padding: 16px;
+    height: 30px;
+    text-align: center;
+    color:#999;
+}
 .active .mint-tab-item-label {
     color: $WtsColor;
 }
@@ -11,3 +21,337 @@
 .data-list {
     padding: 0 16px;
 }
+/***订单详情****/
+.col-display{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.order-body{
+    .lb{
+        text-align: left;
+    }
+    .rb{
+        text-align: right;
+    }
+    .t-box{
+        margin-bottom: 10px;/**no**/
+        background-color: #fff;
+        padding:0 16px;
+        position: relative;
+       .icon{
+           font-size: 20px;/*no*/
+       }
+        &.status{
+            display: flex;
+            color:#fff;
+            font-size:16px;
+            height: 56px;
+            background-color: #42BD56;
+           align-items: center;
+            >div{
+                flex: 1;
+                position: relative;
+                &:first-child{
+                    padding-left: 26px;
+                }
+                .icon{
+                    position: absolute;
+                    top:-1px;
+                    left:0;
+                }
+            }
+      
+        }
+        &.t-adress{
+            @extend .col-display;
+            height: 73px;
+        }
+        &.t-success{
+            height: 48px;
+            @extend .col-display;
+        }
+        .t-head{
+            position: relative;
+            display: block;
+            height: 54px;
+            line-height: 54px;
+            font-size: 16px;
+            color: #333;
+            letter-spacing: 0.19px;
+            padding: 0 16px;
+        }
+        &.t-product{
+            padding: 0;
+            .t-list{
+                height: auto;
+            }
+            li{
+                height: 88px;
+                border-bottom:1px solid #F3F3F3;
+                padding: 0 16px;
+                a{
+                    display: block;
+                    display: flex;
+                    padding-top: 8px;
+                }
+                .img{
+                    width: 72px;
+                    height: 72px;
+                    
+                }
+                .content{
+                    flex: 1;
+                    margin-left: 8px;
+                }
+                .t-price{
+                    margin-top: 9px;
+                    font-size: 16px;
+                    color: #FF7733;
+                    letter-spacing: 0.19px;
+                    span:last-child{
+                        font-size: 12px;
+                        color: #999;
+                        letter-spacing: 0.14px;
+                        float: right;
+                    }
+                }
+            }
+        }
+        .order-info{
+            padding: 16px;
+            .order-row-info{
+                display: flex;
+                font-size: 14px;
+                line-height: 20px;
+                .title{
+                    width: 72px;
+                    height: 20px;
+                    color: #999;
+                }
+                .info{
+                    flex: 1;
+                    color: #666;
+                }
+            }
+        }
+        .bg-line{
+            border-bottom:1px solid #F3F3F3;
+        }
+    
+
+        p{
+            line-height: 20px;
+        }
+        .t-title{
+            
+            font-size: 14px;
+            color: #333;
+        }
+        .t-subhead{
+            font-size: 12px;
+            color: #999;
+        }
+        &.t-foot{
+            margin-bottom: 0;
+            height: 48px;/*no*/
+            display: flex;
+            line-height: 48px;/*no*/
+            font-size: 14px;
+            color: #666666;
+            letter-spacing: 0.17px;
+            .amoney{
+                width:150px;
+                span{
+                    color:#FF7733;
+                    font-size: 12px;
+                    i{
+                        font-size: 18px;
+                    }
+                }
+            }
+            .btns{
+                flex: 1;
+                padding: 0;
+                text-align: right;
+               align-items: center;
+            }
+        }
+    }
+   
+}
+.p16{
+    padding: 16px;/*no*/
+}
+.p016{
+    padding: 0 16px;
+}
+.order-track{
+    .circle{
+        position: relative;
+        span{
+            display: block;
+            width: 16px;/*no*/
+            height: 16px;/*no*/
+            background: #e6e6e6;
+            border-radius: 50%;
+            position: relative;
+            border:none;
+            &::after{
+                content: "";
+                display: block;
+                position: absolute;
+                width:8px; /*no*/
+                height:8px;/*no*/
+                background-color: #999;
+                top:4px;/*no*/
+                left:4px;/*no*/
+                border-radius: 50%;
+            }
+            &.ok{
+                background-color: #cef5d4;
+            }
+            &.ok::after{
+                background-color: #42BD56;
+            }
+        }
+    }
+.track-top{
+    background: #fff;
+    
+    .thead{
+    @extend .p16;            
+    height: 100px;/*no*/
+    background: #42BD56;
+    box-sizing: border-box;
+    .txt{
+        margin-bottom: 4px;/*no*/
+        font-size: 14px;/*no*/
+        color: #fff;
+        letter-spacing: 0;
+        line-height: 20px;/*no*/
+    }
+    }
+    .tbody{
+        @extend .p16;
+        box-sizing: border-box;
+        height: 108px;/*no*/
+        display: flex;
+        flex-direction: column;
+        >div{
+            flex: 1;
+        }
+        .justify-content{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-content:space-between;
+        }
+        .info-txt{
+            @extend .justify-content;
+            font-size: 12px;
+            >div{
+                color: #666;
+                padding: 0 4px;
+            }
+        }
+        .line-content{
+            @extend .justify-content;
+            padding:0 16px;
+            position: relative;
+            .line{
+                position: absolute;
+                height: 2px;
+                width: 90%;
+                background: #DCDCDC;
+                bottom:33%;
+            }
+            .circle{
+                padding-top:7px;/*no*/
+            }
+        }
+        .status{
+            >div{
+                position: relative;
+            }
+            .ok{
+               height: 18px;/*no*/
+               line-height: 18px;/*no*/
+               text-align: center;
+               background: #42BD56;
+               border-radius: 12px;/*no*/
+               color:#fff;
+               &::after{
+                   content:'';
+                   position: absolute;
+                   width:0; 
+                   height:0; 
+                   left:40%;
+                   bottom: -5px;/*no*/
+                   border-left:5px solid transparent;/*no*/
+                   border-right:5px solid transparent;/*no*/
+                   border-top:5px solid #42BD56;/*no*/
+
+               }
+            }
+        }
+        // .line{
+        //     width: 82px;
+        //     height: 2px;
+        //     background: #DCDCDC;
+        // }
+    }
+}
+.track-body{
+    margin-top: 9px;/*no*/
+    background: #fff;
+    .bhead{
+        height: 54px;/*no*/
+        @extend .p016;
+        h2{
+            line-height: 54px;/*no*/
+            font-size: 16px;/*no*/
+            color: #333;
+            letter-spacing: 0;
+            border-bottom:1px solid #F3F3F3;
+        }
+    }
+    .bcontent{
+        @extend .p16;
+        ul{
+            li{
+                height: 77px;
+                display: flex;
+                position: relative;
+                &::before{
+                    content: "";
+                    width: 1px;
+                    height: 90%;
+                    display: block;
+                    position: absolute;
+                    top:4px;
+                    left:7px;
+                    background-color: #DCDCDC;
+                }
+                .info{
+                    flex: 1;
+                   padding-left: 16px;
+                    font-size: 14px;
+                    color: #333333;
+                    line-height: 20px;
+                    .title{
+                        margin-bottom: 4px;/*no*/
+                    }
+                    .time{
+                        font-size: 12px;
+                        color: #999;
+                    }
+                }
+            }
+        }
+    }
+}
+}
+/**订单待还详情**/
+
+       

@@ -25,7 +25,6 @@ export default {
 @import "./assets/css/minx";
 
 #app {
-  padding-bottom: 48px;
   font-size: 14px;
 }
 </style>

@@ -7,8 +7,8 @@
     </mt-header>
     <div class="data-list">
       <ul>
-        <li v-for="item in datalist">
-          <div class="address-box" @click="Choose(item.id)">
+        <li v-for="(item,index) in datalist">
+          <div class="address-box" @click="Choose(index)">
             <div class="check-box" v-show="adressType==1">
               <span class="mint-checkbox">
                 <input type="checkbox" class="mint-checkbox-input" value="" :checked="addressId==item.id">
@@ -66,16 +66,16 @@ export default {
           params: vm.option
         })
         .then(res => {
-          console.log(res);
           if (res.code == "999") {
             vm.datalist = res.data;
           }
         })
         .catch(err => {});
     },
-    Choose(id) {
+    Choose(index) {
       var vm = this;
-      vm.addressId = id;
+      vm.$store.commit('SETADDRESS',vm.datalist[index]);
+      this.$router.go(-1);
     },
     editAdress(val) {
       var vm = this;

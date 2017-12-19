@@ -5,9 +5,11 @@
               <div class="swiper-container">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide" v-for="ms in infos.products.slice(0,8)">
-                    <img class="detail-img" :src="ms.imageUrl" :alt="ms.name" />
-                    <p class="name">{{ms.name}}</p>
-                    <p class="price"><span class="new-price"><span class="cl">¥</span>{{ms.price}}</span><span class="market">¥{{ms.marketPrice}}</span></p>
+                    <router-link :to="{name:'detail', params: { id: ms.productId }}">
+                      <img class="detail-img" :src="ms.imageUrl" :alt="ms.name" />
+                      <p class="name">{{ms.name}}</p>
+                      <p class="price"><span class="new-price"><span class="cl">¥</span>{{ms.price}}</span><span class="market">¥{{ms.marketPrice}}</span></p>
+                    </router-link>
                   </div>
                   <div class="swiper-slide more">
                     <p>查看全部</p>
@@ -22,9 +24,11 @@
               <div class="swiper-container mt-10">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide" v-for="ms in infos.products.slice(0,8)">
+                    <router-link :to="{name:'detail', params: { id: ms.productId }}">
                     <img class="detail-img" :src="ms.imageUrl" :alt="ms.name" />
                     <p class="name">{{ms.name}}</p>
                     <p class="price"><span class="new-price"><span class="cl">¥</span>{{ms.price}}</span><span class="market">¥{{ms.marketPrice}}</span></p>
+                    </router-link>
                   </div>
                   <div class="swiper-slide more">
                     <p>查看全部</p>

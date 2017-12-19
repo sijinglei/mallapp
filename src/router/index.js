@@ -8,13 +8,18 @@ import Home from "@/views/Home";
 import Login from "@/views/Login";
 import UserIndex from "@/views/user/Index";
 import Lease from "@/views/user/lease";
-import LeaseOrder from "@/views/user/leaseOrder";
+import OrderList from "@/views/user/orderList";
+import OrderDetail from '@/views/user/relevant/order-detail';
 import Coupon2 from "@/views/user/coupon2";
 import Address from "@/views/user/address";
 import Help from "@/views/user/Help";
 import Service from "@/views/user/service";
 import Setting from "@/views/user/setting";
 import AddAddress from '@/views/user/relevant/add-address';
+import OrderTracking from '@/views/user/relevant/order-tracking';
+import LeaseDetail from '@/views/user/relevant/lease-detail';
+
+
 Vue.use(Router);
 var routeArr = [{
     path: "/",
@@ -42,10 +47,22 @@ var routeArr = [{
     component: Lease
 },
 {
-    path: "/leaseorder/:orderType/:status",
-    name: "LeaseOrder", //租赁订单
+    path: "/leasedetail",
+    name: "leasedetail",
     meta: { requireLogin: true },
-    component: LeaseOrder
+    component: LeaseDetail
+},
+{
+    path: "/orderlist/:orderType/:status",
+    name: "OrderList", //租赁订单
+    meta: { requireLogin: true },
+    component: OrderList
+},
+{
+    path: "/orderdetail",
+    name: "OrderDetail",
+    meta: { requireLogin: true },
+    component: OrderDetail
 },
 {
     path: "/coupon2",
@@ -64,6 +81,12 @@ var routeArr = [{
     name: "addAddress", //编辑收货地址
     meta: { requireLogin: true },
     component: AddAddress
+},
+{
+    path: '/ordertracking',
+    name: 'orderTracking',
+    meta: { requireLogin: true },
+    component: OrderTracking
 },
 {
     path: "/Help",
@@ -85,15 +108,16 @@ var routeArr = [{
 }
 ];
 const router = new Router({
+    hashbang: false,
     routes: [...routeArr, ...LeiRouter, ...GanRouter]
 });
 // 判断是否需要登录权限 以及是否登录
 router.beforeEach((to, from, next) => {
-   // console.log(to);
+    // console.log(to);
     if (to.matched.some(res => res.meta.requireLogin)) {
         console.log("需要验证登陆");
         // 判断是否需要登录权限
-        if (com.getSession("loginUserBaseInfo")) {
+        if (com.getCookie('username') && com.getSession("loginUserBaseInfo")) {
             // 判断是否登录
             console.log("已经登陆");
             next();

@@ -4,26 +4,40 @@
       <i class="icon icon-large"></i>
     </div>
     <div class="head-search">
-      <i class="icon icon-search"></i><input type="search" placeholder="搜索商品">
+      <i class="icon icon-search"></i>
+      <input type="search" placeholder="搜索商品" v-model="keyword">
     </div>
+      <input class="search-s" type="button" value="搜索" @click="searchAll()">
   </div>
 </template>
 <script>
+  import api from "@/api";
   export default {
     data(){
       return{
-
+        keyword:'',
       }
     },
-
+    mounted(){
+      this.keyword=this.$route.query.value||'';
+    },
     methods: {
       goBack () {
         this.$router.go(-1)
       },
+      searchAll(){
+        var that = this;
+        if(that.$route.path=='/category'){
+          that.$router.push({path:'/productlist',query:{value:that.keyword}});
+        }else{
+          that.$emit('search-list',that.keyword);
+        }
+      }
     }
   }
 </script>
 <style lang="scss" scoped="">
+  @import "../../assets/css/global";
   @import "../../assets/fonts/iconfont.css";
   .cate-head{
     position: fixed;
@@ -56,5 +70,12 @@
            text-indent: 36px;
          }
       }
+    .search-s{
+      height: 24px;
+      padding: 0 4px;
+      margin-right: 16px;
+      background: $WtsColor;
+      color: #FFF;
+    }
   }
 </style>

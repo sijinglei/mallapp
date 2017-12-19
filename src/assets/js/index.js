@@ -17,7 +17,7 @@ const Axios = axios.create({
 //POST传参序列化(添加请求拦截器)
 Axios.interceptors.request.use(
     config => {
-      //  console.log("请求拦截开始");
+        //  console.log("请求拦截开始");
         Indicator.open({
             spinnerType: "fading-circle"
         });
@@ -38,7 +38,7 @@ Axios.interceptors.request.use(
         return config;
     },
     error => {
-     //   console.log(error);
+        //   console.log(error);
         Toast({
             // 错误提醒
             message: error,
@@ -51,13 +51,13 @@ Axios.interceptors.request.use(
 //返回状态判断(添加响应拦截器)
 Axios.interceptors.response.use(
     res => {
-      //  console.log("对响应数据做些事");
+        //  console.log("对响应数据做些事");
         Indicator.close();
         //对响应数据做些事
         if (res.data && res.data.code != "999") {
             Toast({
                 // 错误提醒
-                message: res.data.message,
+                message: res.data.message || '发送数据异常',
                 position: "bottom"
             });
             return Promise.reject(res.data.message);
@@ -79,60 +79,43 @@ Axios.interceptors.response.use(
                 path: "/login"
             });
         } else {
-            // 若是有基础信息的情况下,判断时间戳和当前的时间,若是当前的时间大于服务器过期的时间
-            let lifeTime =
-                JSON.parse(window.localStorage.getItem("loginUserBaseInfo")).lifeTime *
-                1000;
-            let nowTime = new Date().getTime(); // 当前时间的时间戳
-            // console.log(nowTime, lifeTime);
-            // console.log(nowTime > lifeTime);
-            if (nowTime > lifeTime) {
+            window.localStorage.setItem("loginUserBaseInfo", '');
+            //    console.log("请求响应失败");
+            // 下面是接口回调的satus ,因为我做了一些错误页面,所以都会指向对应的报错页面
+            // if (error.response.status === 403) {
+            //     router.push({
+            //         path: "/error/403"
+            //     });
+            // }
+            // if (error.response.status === 500) {
+            //     router.push({
+            //         path: "/error/500"
+            //     });
+            // }
+            // if (error.response.status === 502) {
+            //     router.push({
+            //         path: "/error/502"
+            //     });
+            // }
+            // if (error.response.status === 404) {
+            //     router.push({
+            //         path: "/error/404"
+            //     });
+            //}
+            if (error.response.status === 500) {
+                //    console.log(error.response);
                 Toast({
-                    message: "登录状态信息过期,请重新登录",
+                    // 错误提醒
+                    message: error.response.statusText,
                     position: "bottom"
                 });
-                router.push({
-                    path: "/login"
+            }
+            if (error.response.status === 504) {
+                Toast({
+                    // 错误提醒
+                    message: error.response.statusText,
+                    position: "bottom"
                 });
-            } else {
-            //    console.log("请求响应失败");
-          //      console.log(error.response);
-                // 下面是接口回调的satus ,因为我做了一些错误页面,所以都会指向对应的报错页面
-                // if (error.response.status === 403) {
-                //     router.push({
-                //         path: "/error/403"
-                //     });
-                // }
-                // if (error.response.status === 500) {
-                //     router.push({
-                //         path: "/error/500"
-                //     });
-                // }
-                // if (error.response.status === 502) {
-                //     router.push({
-                //         path: "/error/502"
-                //     });
-                // }
-                // if (error.response.status === 404) {
-                //     router.push({
-                //         path: "/error/404"
-                //     });
-                //}
-                if (error.response.status === 500) {
-                //    console.log(error.response);
-                    Toast({
-                        // 错误提醒
-                        message: error.response.statusText,
-                        position: "bottom"
-                    });
-                }
-                if (error.response.status === 504) {
-                    Toast({
-                        // 错误提醒
-                        message: error.response.statusText,
-                        position: "bottom"
-                    });
-                }
             }
         }
         // 返回 response 里的错误信息
@@ -140,9 +123,10 @@ Axios.interceptors.response.use(
     }
 );
 
+
 // 对axios的实例重新封装成一个plugin ,方便 Vue.use(xxxx)
 export default {
-    install: function(Vue, Option) {
+    install: function (Vue, Option) {
         Object.defineProperty(Vue.prototype, "$axios", { value: Axios });
     }
 };

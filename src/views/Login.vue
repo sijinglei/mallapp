@@ -26,8 +26,8 @@ export default {
     return {
       title: "登陆",
       userInfo: {
-        username: "15180000002",
-        userpwd: "aaaaaa"
+        username: "13528800028", //"15180000002",
+        userpwd: "w111111" //aaaaaa
       }
     };
   },
@@ -42,22 +42,14 @@ export default {
         })
         .then(function(data) {
           console.log("请求成功！！！！");
-          console.log(data);
-          if (data.code == "999") {
-            //保存用户登录信息
-            com.setSession("loginUserBaseInfo", JSON.stringify(data.data));
-            Toast({
-              message: "登录成功"
-            });
-            that.$router.push({
-              path: "/home"
-            });
-          } else {
-          }
-        })
-        .catch(function(error) {
-          console.log("请求异常");
-          console.log(error);
+          //保存用户登录信息
+          com.setSession("loginUserBaseInfo", JSON.stringify(data.data));
+          Toast({
+            message: "登录成功"
+          });
+          that.$router.push({
+            path: "/home"
+          });
         });
     }
   },

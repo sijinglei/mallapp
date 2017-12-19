@@ -21,8 +21,13 @@ export const HOME_DATA = "HOME_DATA"; //首页数据
 export const CAR_EDIT='CAR_EDIT';//购物车
 export const POPUP_HIDE='POPUP_HIDE';//弹窗层
 export const POPUP_SHOW='POPUP_SHOW';//弹窗层
+export const PRODUCTDATE='PRODUCTDATE';//下单数据
 
 /**
  * 订单
  */
 export const ORDER_DATA = "ORDER_DATA"; //订单数据
+export const SETADDRESS ='SETADDRESS';//订单地址
+export const SETMYCOUPONID ='SETMYCOUPONID';//优惠券
+export const PRODUCTSCOUPON ='PRODUCTSCOUPON';//填写订单优惠券
+

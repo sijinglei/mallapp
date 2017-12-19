@@ -1,53 +1,55 @@
 <template>
-    <div>
-      <mt-header title="帮助中心">
-        <div slot="left">
-          <mt-button  icon="back" @click="goBack()"></mt-button>
-        </div>
-      </mt-header>
-      <div class="content">
-        <span class="min-title"></span>
-        <div class="text">{{contents}}</div>
-
+  <div>
+    <mt-header title="帮助中心">
+      <div slot="left">
+        <mt-button  icon="back" @click="goBack()"></mt-button>
       </div>
+    </mt-header>
+    <div class="content">
+      <span class="min-title">{{title}}</span>
+      <div class="text">{{content}}</div>
+
     </div>
+  </div>
 </template>
 <script>
   import api from "@/api";
-    export default {
-        components: {},
-        data() {
-            return {
-              params:{
-                requrl:api.my.helpdetail,
-                messageId:0
-              },
-              contents:[]
-            }
+  export default {
+    components: {},
+    data() {
+      return {
+        params:{
+          requrl:api.my.helpdetail,
+          messageId:0
         },
-      created(){
-        var vm=this;
-        vm.params.messageId=vm.$route.query.id;
+        content:[],
+        title:[]
+      }
+    },
+    created(){
+      var vm = this;
+      vm.params.messageId=vm.$route.query.id;
+      vm.title = vm.$route.query.typeName;
+
+    },
+    methods: {
+      goBack () {
+        this.$router.go(-1);
       },
-        methods: {
-          goBack () {
-            this.$router.go(-1);
-          },
-          getDetail(){
-            var that = this;
-            this.$axios.get(api.get,{params:that.params}).then(data =>{
-              if(data.code == '999'){
-                let thisContent = data.data.content;
-                console.log(data.data);
-                this.contents =thisContent;
-              }
-            })
+      getDetail(){
+        var that = this;
+        this.$axios.get(api.get,{params:that.params}).then(data =>{
+          if(data.code == '999'){
+            let thisContent = data.data.content;
+            this.content =thisContent;
           }
-        },
-        mounted: function () {
-          this.getDetail();
-        }
+        })
+      }
+    },
+    mounted: function () {
+      this.getDetail();
     }
+  }
 </script>
 <style lang="scss" scoped>
   @import "../../assets/css/global";
@@ -61,7 +63,9 @@
 
   .text{
     padding:13px 16px;
-    height:100%;
     background: #FFF;
+    font-size: 14px;
+    color: #333333;
+    line-height: 21px;
   }
 </style>

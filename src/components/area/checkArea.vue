@@ -14,7 +14,7 @@
 <script>
 import api from "@/api";
 //选择省市区（县)子组件
-import areaList from "./areajson";
+// import areaList from "./areajson";
 export default {
   data() {
     return {
@@ -49,18 +49,19 @@ export default {
       citySelectName: "",
       citySelectCode: "",
       areaSelectName: "",
-      areaSelectCode: ""
+      areaSelectCode: "",
+      areaList: [] //城市数据
     };
   },
   created() {
     var vm = this;
+    vm.getArea();
   },
   mounted() {
     var vm = this;
-    vm.getProvAddress();
-    vm.resetArea();
+    // vm.getProvAddress();
+    // vm.resetArea();
     // console.log(areaList);
-    // vm.getArea();
   },
   methods: {
     getArea() {
@@ -68,12 +69,17 @@ export default {
       vm.$axios
         .get(api.get, {
           params: {
-            requrl: api.area.list
+            requrl: api.area.tree
           }
         })
         .then(res => {
           console.log("获取省");
           console.log(res);
+          if (res.code == "999") {
+            vm.areaList = res.data;
+            vm.getProvAddress(res.data);
+            vm.resetArea();
+          }
         });
     },
     close() {
@@ -101,48 +107,64 @@ export default {
     /**重置**/
     resetArea() {
       var vm = this;
-      vm.dateSlots[0].values = this.provName;
-      vm.dateSlots[1].values = this.cityName;
-      vm.dateSlots[2].values = this.areaName;
+      vm.dateSlots[0].values = vm.provName;
+      vm.dateSlots[1].values = vm.cityName;
+      vm.dateSlots[2].values = vm.areaName;
     },
     onDateChange(picker, values) {
       var vm = this;
-      console.log(values);
+      // console.log(values);
       vm.provSelectName = values[0] || "";
       vm.citySelectName = values[1] || "";
       vm.areaSelectName = values[2] || "";
-      vm.getProvAddress();
-      vm.resetArea();
+      if (vm.areaList.length > 0) {
+        vm.getProvAddress(vm.areaList);
+        vm.resetArea();
+      }
     },
 
-    getProvAddress(fName, sName) {
+    getProvAddress(allData) {
       var vm = this;
       vm.provCode = [];
       vm.provName = [];
-      areaList.forEach(function(item, i) {
-        vm.provCode.push(item.value);
-        vm.provName.push(item.name);
-        if (vm.provSelectName === item.name) {
-          vm.getCityAddress(item.sub);
-        } else {
-          if (i === 0) {
-            vm.getCityAddress(item.sub);
+      if (allData.length > 0) {
+        for (var d in allData) {
+          let item = allData[d];
+          vm.provCode.push(item.id);
+          vm.provName.push(item.name);
+          if (vm.provSelectName === item.name) {
+            vm.getCityAddress(item.children);
+          } else {
+            if (d == 0) {
+              vm.getCityAddress(item.children);
+            }
           }
         }
-      });
+      }
+      // areaList.forEach(function(item, i) {
+      //   vm.provCode.push(item.value);
+      //   vm.provName.push(item.name);
+      //   if (vm.provSelectName === item.name) {
+      //     vm.getCityAddress(item.sub);
+      //   } else {
+      //     if (i === 0) {
+      //       vm.getCityAddress(item.sub);
+      //     }
+      //   }
+      // });
     },
     getCityAddress(citylist) {
       var vm = this;
       vm.cityCode = [];
       vm.cityName = [];
-      citylist.forEach(function(item, i) {
-        vm.cityCode.push(item.value);
+      citylist.forEach((item, i) => {
+        vm.cityCode.push(item.id);
         vm.cityName.push(item.name);
         if (vm.citySelectName === item.name) {
-          vm.getAreaAddress(item.sub);
+          vm.getAreaAddress(item.children);
         } else {
           if (i === 0) {
-            vm.getAreaAddress(item.sub);
+            vm.getAreaAddress(item.children);
           }
         }
       });
@@ -153,7 +175,7 @@ export default {
       vm.areaName = [];
       areaedlist.forEach(function(item, i) {
         if (i != 0) {
-          vm.areaCode.push(item.value);
+          vm.areaCode.push(item.id);
           vm.areaName.push(item.name);
         }
       });

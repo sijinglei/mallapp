@@ -65,7 +65,7 @@
           <div class="price">
             总价：<span class="t">¥<span class="ice">{{price}}</span></span>
           </div>
-          <div class="set-btn">结算<span v-show="nub>0">{{nub}}</span></div>
+          <div class="set-btn" @click="payMoney">结算<span v-show="nub>0">{{nub}}</span></div>
         </div>
       </div>
       <div v-else>
@@ -169,7 +169,6 @@
               return price.toFixed(2)
           },
           postCar(){
-              console.log('ru')
              var vm=this;
             this.$axios.post(api.post,{requrl:api.cart.edit,data:vm.ShopCarDate(vm.data)})
               .then((res)=>{
@@ -194,6 +193,36 @@
               });
               console.log(arr);
               return arr;
+          },
+          getPostDate(){
+              //提交下单的数据
+            let arr=[];
+            this.data.forEach((item)=>{
+              let postDate={};
+                if(item.isCheck==1){
+                  postDate.productId=item.productId;
+                  postDate.num=item.num;
+                  postDate.leaseMonth=item.leaseMonth;
+                  let carr=[];
+                  item.services.forEach((citem)=>{
+                    carr.push(citem.id)
+                   });
+                  postDate.serviceIds=carr;
+                  arr.push(postDate)
+                }
+            });
+           return arr;
+          },
+          payMoney(){
+              let vm=this;
+              this.$axios.post(api.post,{requrl:api.order.preadd,data:this.getPostDate()}).then((res)=>{
+                    if(res.code=='999'){
+                        //将下单数据存入vuex
+                        vm.$store.commit('PRODUCTDATE',res.data);
+                        window.localStorage.setItem('PRODUCTDATE',JSON.stringify(res.data));
+                        vm.$router.push({name:'productfill'});
+                    }
+              })
           },
           ...mapMutations({
             'tabarselect':'TABAR_SELECT',
@@ -294,7 +323,7 @@
           var vm=this;
           this.$axios.get(api.get,{
               params:{
-                  requrl:api.cart.my,
+                  requrl:api.cart.my
               }
           })
             .then((res) => {
