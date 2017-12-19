@@ -1,9 +1,15 @@
 var qs = require("querystring");
 var client = require("../common/HttpClient");
+var chalk = require('chalk');
+const log = console.log;
+const error = chalk.bold.red;
+const warning = chalk.keyword('orange');
+const green = chalk.keyword('green');
+
 
 //登录
-exports.loginIn = function(req, res) {
-    console.log("=======请求开始=======");
+exports.loginIn = function (req, res) {
+    log(warning("=======请求开始======="));
     var username = req.query.username;
     var reqData = {
         username: req.query.username,
@@ -18,44 +24,46 @@ exports.loginIn = function(req, res) {
     var secret = "a4160d00-b083-40f9-a749-07aef8782001";
     reqData.sign = getSign(reqData, secret);
     var data = qs.stringify(reqData);
-    console.log(data);
+    log(green(data));
     client.GetByClientId(
         "/newmobile/router/user.login?" + data,
         (headers, chunk) => {
             var obj = JSON.parse(chunk);
-            console.log("------------保存session---------------");
+            log(warning("------------保存session---------------"));
+            log(obj);
             if (obj.code == "999") {
                 req.session.loginHeaders = headers;
                 //最终过期时间，如果没有任何操作，2小时过期
                 var expire_time = new Date();
                 expire_time.setHours(expire_time.getHours() + 2);
                 req.session.expire_time = expire_time.toLocaleString();
+                res.cookie("username", reqData.username);
             }
             res.json(obj);
         }
     );
 };
 //注册
-exports.register = function(req, res) {
+exports.register = function (req, res) {
     var mobile = req.query.mobile;
 };
 
 //获取手机验证码
-exports.getMobileCode = function(req, res) {
+exports.getMobileCode = function (req, res) {
     var mobile = req.query.mobile;
     client.GetByClientId(
         "/user.register.mobile.code?mobile=" + mobile,
         (headers, chunk) => {
-            console.log(chunk);
+            log(chunk);
         }
     );
 };
+
 
 //生成签名方法
 function getSign(data, secret) {
     var string = raw1(data);
     string = secret + string + secret;
-    console.log(string);
     var crypto = require("crypto");
     return crypto
         .createHash("sha1")
@@ -68,7 +76,7 @@ function raw1(args) {
     var keys = Object.keys(args);
     keys = keys.sort();
     var newArgs = {};
-    keys.forEach(function(key) {
+    keys.forEach(function (key) {
         newArgs[key] = args[key];
     });
     var string = "";

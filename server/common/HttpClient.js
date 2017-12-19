@@ -1,9 +1,15 @@
 var http = require("http");
 var base = require("./base");
+var chalk = require('chalk');
+const log = console.log;
+
+const error = chalk.bold.red;
+const warning = chalk.keyword('orange');
+const green = chalk.keyword('green');
 
 var HttpClient = {
     //资源请求入口
-    Get: function(path, loginCookie, callback) {
+    Get: function (path, loginCookie, callback) {
         var reqPath = path.indexOf("/") == 0 ? path.substring(1) : path;
         var options = this.ClientHeader(
             base.apiConfig.apiBasePath + path, //.replace("/api/", ""),
@@ -11,11 +17,11 @@ var HttpClient = {
             "",
             "get"
         );
-        console.log(options);
+        log(warning(options));
         this.HttpGet(options, callback);
     },
 
-    Post: function(path, loginCookie, reqData, callback) {
+    Post: function (path, loginCookie, reqData, callback) {
         var reqPath = path.indexOf("/") == 0 ? path.substring(1) : path;
         var options = this.ClientHeader(
             base.apiConfig.apiBasePath + reqPath, //.replace("/api/", ""),
@@ -23,37 +29,36 @@ var HttpClient = {
             reqData,
             "post"
         );
-        console.log("post请求头");
-        console.log(options);
+        log(green("post请求头"));
+        log(warning(options));
         this.HttpPost(options, reqData, callback);
     },
     //登录注册请求入口
-    GetByClientId: function(path, callback) {
+    GetByClientId: function (path, callback) {
         var options = this.ClientLoginHeader(path, "", "get");
-        console.log(options);
         this.HttpLoginGet(options, callback);
     },
 
-    PostByClientId: function(path, reqData, callback) {
+    PostByClientId: function (path, reqData, callback) {
         var options = this.ClientLoginHeader(path, reqData, "post");
-
         this.HttpPost(options, reqData, callback);
     },
     //Get方法
-    HttpGet: function(options, callback, encode = "utf8") {
+    HttpGet: function (options, callback, encode = "utf8") {
         try {
             var errorData = {
-                flag: 0,
-                msg: "异常"
+                code: 0,
+                data: "",
+                message: "异常"
             };
-            var req = http.get(options, function(res) {
+            var req = http.get(options, function (res) {
+                res.setEncoding(encode);
                 if (res.statusCode == "200") {
                     var str = "";
-                    res.setEncoding(encode);
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         str += chunk;
                     });
-                    res.on("end", function() {
+                    res.on("end", function () {
                         if (encode == "binary") {
                             callback(res.headers, str);
                         } else {
@@ -61,17 +66,16 @@ var HttpClient = {
                         }
                     });
                 } else if (res.statusCode == "401") {
-                    callback('{ "flag": -1, "message": "拒绝访问","data":[] }');
+                    callback('{ "code": -1, "message": "拒绝访问" }');
                 } else {
                     var str = "";
-                    res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         str += chunk;
                     });
-                    res.on("end", function() {
+                    res.on("end", function () {
                         try {
                             var obj = JSON.parse(str);
-                            console.error(obj.error);
+                            log(error(obj.error));
                             if (obj.error != undefined) {
                                 callback('{"code":"-1", "message": "' + obj.error + '" }');
                             } else if (obj.message != undefined) {
@@ -79,23 +83,24 @@ var HttpClient = {
                             } else {
                                 callback('{"code":"-1", "message": "服务器异常" }');
                             }
-                        } catch (ex) {
-                            console.error(ex);
+                        } catch (e) {
+                            log(error(e));
                             callback('{"code":"-1", "message": "服务器异常" }');
                         }
                     });
                 }
-                res.on("error", function(e) {
-                    console.error(e);
-                    console.log("problem with request: " + e.message);
+
+                res.on("error", function (e) {
+                    log(error(e));
+                    log(error("problem with request: " + e.message));
                     if (callback) {
                         callback('{"code":"-1", "message": "' + e.message + '" }');
                     }
                 });
             });
+            req.end();
         } catch (err) {
-            console.error(err);
-            console.log("catch异常");
+            log(error("HttpGet catch异常"));
             var errorMsg =
                 "\n" +
                 "Error " +
@@ -106,39 +111,40 @@ var HttpClient = {
                 err.stack ||
                 err.message ||
                 "unknow error" + "\n";
-            console.log(errorMsg);
+            log(error(errorMsg));
         }
     },
     //Get方法
-    HttpLoginGet: function(options, callback, encode = "utf8") {
+    HttpLoginGet: function (options, callback, encode = "utf8") {
         try {
             var errorData = {
-                flag: 0,
-                msg: "异常"
+                code: 0,
+                data: '',
+                message: "异常"
             };
-            console.log(options);
-            var req = http.get(options, function(res) {
+            log(warning(options));
+            var req = http.get(options, function (res) {
                 if (res.statusCode == "200") {
                     var str = "";
                     res.setEncoding(encode);
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         str += chunk;
                     });
-                    res.on("end", function() {
+                    res.on("end", function () {
                         callback(res.headers, str);
                     });
                 } else if (res.statusCode == "401") {
-                    callback('{ "flag": -1, "message": "拒绝访问","data":[] }');
+                    callback('{ "code": -1, "message": "拒绝访问","data":[] }');
                 } else {
                     var str = "";
                     res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         str += chunk;
                     });
-                    res.on("end", function() {
+                    res.on("end", function () {
                         try {
                             var obj = JSON.parse(str);
-                            console.error(obj.error);
+                            log(error(obj));
                             if (obj.error != undefined) {
                                 callback('{"code":"-1", "message": "' + obj.error + '" }');
                             } else if (obj.message != undefined) {
@@ -146,23 +152,23 @@ var HttpClient = {
                             } else {
                                 callback('{"code":"-1", "message": "服务器异常" }');
                             }
-                        } catch (ex) {
-                            console.error(ex);
+                        } catch (e) {
+                            log(error(e));
                             callback('{"code":"-1", "message": "服务器异常" }');
                         }
                     });
                 }
-                res.on("error", function(e) {
-                    console.error(e);
-                    console.log("problem with request: " + e.message);
+                res.on("error", function (e) {
+                    log(error(e));
+                    log("problem with request: " + e.message);
                     if (callback) {
                         callback('{"code":"-1", "message": "' + e.message + '" }');
                     }
                 });
             });
+            req.end();
         } catch (err) {
-            console.error(err);
-            console.log("catch异常");
+            log(error("HttpLoginGet catch异常"));
             var errorMsg =
                 "\n" +
                 "Error " +
@@ -173,35 +179,36 @@ var HttpClient = {
                 err.stack ||
                 err.message ||
                 "unknow error" + "\n";
-            console.log(errorMsg);
+            log(error(errorMsg));
+            if (callback) {
+                callback('{"code":"-1", "message": "' + err.message + '" }');
+            }
         }
     },
 
     //Post方法
-    HttpPost: function(options, reqData, callback) {
+    HttpPost: function (options, reqData, callback) {
         try {
-            var req = http.request(options, function(res) {
-                console.log("headers:", JSON.stringify(res.headers));
-                console.log("STATUS: " + res.statusCode);
+            var req = http.request(options, function (res) {
                 if (res.statusCode == "200") {
                     var str = "";
                     res.setEncoding("utf8");
 
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         str += chunk;
                     });
-                    res.on("end", function() {
+                    res.on("end", function () {
                         callback(str);
                     });
                 } else if (res.statusCode == "401") {
-                    callback('{ "flag": -1, "message": "拒绝访问","data":[] }');
+                    callback('{ "code": -1, "message": "拒绝访问" }');
                 } else {
                     var str = "";
                     res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         str += chunk;
                     });
-                    res.on("end", function() {
+                    res.on("end", function () {
                         try {
                             var obj = JSON.parse(str);
                             if (obj.error != undefined) {
@@ -209,28 +216,27 @@ var HttpClient = {
                             } else if (obj.message != undefined) {
                                 callback('{"code":"-1", "message": "' + obj.message + '" }');
                             } else {
-                                console.error(obj.message);
+                                log(error(obj.message));
                                 callback('{"code":"-1", "message": "服务器异常" }');
                             }
-                        } catch (ex) {
-                            console.error(ex);
+                        } catch (e) {
+                            log(error(e));
                             callback('{"code":"-1", "message": "服务器异常" }');
                         }
                     });
                 }
             });
-            req.on("error", function(e) {
-                console.log("problem with request: " + e.message);
+            req.on("error", function (e) {
+                log(error(e));
                 if (callback) {
                     callback('{"code":"-1", "message": "' + e.message + '" }');
                 }
             });
             req.write(reqData);
             req.end();
-
-            console.log(req);
         } catch (err) {
-            console.log("catch异常");
+            log(error("HttpPost catch异常"));
+            log(error(err));
             var errorMsg =
                 "\n" +
                 "Error " +
@@ -241,12 +247,15 @@ var HttpClient = {
                 err.stack ||
                 err.message ||
                 "unknow error" + "\n";
-            console.log(errorMsg);
+            log(error(errorMsg));
+            if (callback) {
+                callback('{"code":"-1", "message": "' + err.message + '" }');
+            }
         }
     },
     //一般接口请求头
-    ClientHeader: function(path, loginCookie, data, method) {
-        var _contentType = "application/json";
+    ClientHeader: function (path, loginCookie, data, method) {
+        var _contentType = "application/json; charset=utf-8";
         var options = {
             host: base.apiConfig.host,
             port: base.apiConfig.port,
@@ -254,7 +263,7 @@ var HttpClient = {
             method: method,
             headers: {
                 "Content-Type": _contentType,
-                "Content-Length": Buffer.byteLength(data, "utf8")
+                "Content-Length": Buffer.byteLength(data)
             }
         };
         if (loginCookie && loginCookie != "") {
@@ -263,8 +272,8 @@ var HttpClient = {
         return options;
     },
     //登录头
-    ClientLoginHeader: function(path, data, method) {
-        var _contentType = "application/json";
+    ClientLoginHeader: function (path, data, method) {
+        var _contentType = "application/json;charset=utf-8";
         var options = {
             host: base.loginConfig.host,
             port: base.loginConfig.port,
