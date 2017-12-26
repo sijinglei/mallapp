@@ -3,6 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require("path");
+const config = require("../site_config");
 
 module.exports = {
     build: {
@@ -10,7 +11,7 @@ module.exports = {
         index: path.resolve(__dirname, "../dist/index.html"),
         assetsRoot: path.resolve(__dirname, "../dist"),
         assetsSubDirectory: "static",
-        assetsPublicPath: "/",
+        assetsPublicPath: "./",
         productionSourceMap: true,
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
@@ -26,16 +27,16 @@ module.exports = {
     },
     dev: {
         env: require("./dev.env"),
-        port: process.env.PORT || 885,
+        port: process.env.PORT || config.webSite.port,
         autoOpenBrowser: true,
         assetsSubDirectory: "static",
         assetsPublicPath: "/",
         proxyTable: {
             "/api": {
-                target: "http://localhost:886", //node服务路径
+                target: config.nodeServer.target, //node服务路径
                 changeOrigin: true,
                 pathRewrite: {
-                    "^/api": "/api"
+                    "^/api": "/api"//固定的，暂不公开配置
                 }
             }
         },
