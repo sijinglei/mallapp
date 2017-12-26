@@ -24,6 +24,10 @@ module.exports = {
     },
     OSSUploadApiPath: 'http://test5.tronker.com/api/mall/v1.0/file/uploadImage'//后台上传路径
   },
+  sessionStore: {
+    host: '127.0.0.1',
+    port: '6379'
+  }
 
 
 }

@@ -5,7 +5,9 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 var compression = require("compression");
-// var responseTime = require('response-time');
+var RedisStore = require("connect-redis")(session);
+var config = require("./site_config");
+
 
 //node接口路由配置
 var routes = require("./routes");
@@ -15,18 +17,21 @@ var app = express();
  * 该模块创建了一个中间件，用于记录HTTP服务器中请求的响应时间。
  * 这里的“响应时间”定义为，当请求进入该中间件时，当头被写到客户端时的时间。
  */
-// app.use(responseTime())
-//session 30分钟
+//session 一个小时过期
 app.use(
     session({
         secret: "mallapp",
         cookie: {
-            maxAge: 1000 * 60 * 30
+            maxAge: 1000 * 60 * 60
         },
         resave: true,
         saveUninitialized: true,
         secure: false,
-        rolling: true
+        rolling: true,
+        store: new RedisStore({
+            host: config.sessionStore.host,
+            port: config.sessionStore.port
+        })
     })
 );
 app.use(favicon(__dirname + "/static/favicon.ico"));
@@ -56,6 +61,8 @@ app.use(function (req, res, next) {
     }
     next();
 });
+
+
 
 app.use("/", routes);
 
