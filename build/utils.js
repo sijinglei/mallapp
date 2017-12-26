@@ -21,7 +21,7 @@ exports.cssLoaders = function(options) {
             importLoaders:2
         }
     }
-
+    //移动端H5自使用方案
     const px2remLoader={
       loader:'px2rem-loader',
       options:{

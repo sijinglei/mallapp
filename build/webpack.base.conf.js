@@ -10,7 +10,8 @@ function resolve(dir) {
 
 module.exports = {
     entry: {
-        app: "./src/main.js"
+        app: "./src/main.js",
+        vue: ['vue']
     },
     output: {
         path: config.build.assetsRoot,
@@ -23,7 +24,7 @@ module.exports = {
         extensions: [".js", ".vue", ".json"],
         alias: {
             "@": resolve("src"),
-            static: resolve("static")
+            'static': resolve("static")
         }
     },
     module: {
@@ -47,7 +48,7 @@ module.exports = {
             loader: "url-loader",
             options: {
                 limit: 10000,
-                name: utils.assetsPath("img/[name].[hash:7].[ext]")
+                name: utils.assetsPath("images/[name].[hash:7].[ext]")
             }
         },
         {
