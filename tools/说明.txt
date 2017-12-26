@@ -1,0 +1,5 @@
+安装Redis-x64-3.0.300-beta1
+
+首先安装redis服务，nodejs才能正常运行。
+
+原因：（登录信息（session）缓存在redis中，防止session丢失引起node崩溃）
