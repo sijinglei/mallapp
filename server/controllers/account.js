@@ -6,6 +6,8 @@ const error = chalk.bold.red;
 const warning = chalk.keyword('orange');
 const green = chalk.keyword('green');
 
+const config = require("../../site_config").nodeServer.loginConfig;
+
 
 //登录
 exports.loginIn = function (req, res) {
@@ -14,15 +16,15 @@ exports.loginIn = function (req, res) {
     var reqData = {
         username: req.query.username,
         userpwd: req.query.userpwd,
-        appKey: "100001",
-        method: "user.login",
-        v: "1.0",
-        format: "json",
-        loginType: "3"
+        appKey: config.appKey,
+        method: config.method,
+        v: config.version,
+        format: config.format,
+        loginType: config.loginType
     };
     //不可改变
-    var secret = "a4160d00-b083-40f9-a749-07aef8782001";
-    reqData.sign = getSign(reqData, secret);
+    // var secret = "a4160d00-b083-40f9-a749-07aef8782001";
+    reqData.sign = getSign(reqData, config.secret);
     var data = qs.stringify(reqData);
     log(green(data));
     client.GetByClientId(
@@ -54,7 +56,8 @@ exports.getMobileCode = function (req, res) {
     client.GetByClientId(
         "/user.register.mobile.code?mobile=" + mobile,
         (headers, chunk) => {
-            log(chunk);
+            var obj = JSON.parse(chunk);
+            res.json(obj);
         }
     );
 };

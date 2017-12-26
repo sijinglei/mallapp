@@ -26,6 +26,9 @@ router.get("/api/get", com.GetData);
 //统一post请求转发
 router.post("/api/post", com.PostData);
 
+//上传
+router.post("/api/upload", com.Upload);
+
 // //测试
 // router.get("/api/goods/test", goods.goodList);
 // //商城类目
