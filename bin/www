@@ -8,12 +8,12 @@ var app = require("../app");
 var debug = require("debug")("myapp:server");
 var http = require("http");
 var domain = require("domain");
+var config = require("../site_config");
 
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || "886");
+var port = normalizePort(process.env.PORT || config.nodeServer.port);
 app.set("port", port);
 
 /**
@@ -121,7 +121,7 @@ function onError(error) {
 
 function onListening() {
     var addr = server.address();
-    console.log('http://localhost:866')
+    console.log(config.nodeServer.target)
     var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
     debug("Listening on " + bind);
 }

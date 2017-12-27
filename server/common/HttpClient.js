@@ -1,8 +1,7 @@
-var http = require("http");
-var base = require("../../site_config").nodeServer;
-var chalk = require('chalk');
+const http = require("http");
+const base = require("../../site_config").nodeServer;
+const chalk = require('chalk');
 const log = console.log;
-
 const error = chalk.bold.red;
 const warning = chalk.keyword('orange');
 const green = chalk.keyword('green');
@@ -31,10 +30,6 @@ var HttpClient = {
         );
         log(green("post请求头"));
         log(warning(options));
-        this.HttpPost(options, reqData, callback);
-    },
-    PostFile: function (path, loginCookie, reqData, callback) {
-        var option = this.uploadHead(path, loginCookie);
         this.HttpPost(options, reqData, callback);
     },
     //登录注册请求入口
@@ -289,20 +284,6 @@ var HttpClient = {
             }
         };
         return options;
-    },
-    uploadHead: function (path, loginCookie) {
-        var boundaryKey = '----' + new Date().getTime();
-        var options = {
-            host: base.loginConfig.host,
-            port: base.loginConfig.port,
-            method: 'POST',
-            path: path,//上传服务路径
-            headers: {
-                'Content-Type': 'multipart/form-data; boundary=' + boundaryKey,
-                'Connection': 'keep-alive',
-                'Cookie': loginCookie
-            }
-        };
     }
 };
 

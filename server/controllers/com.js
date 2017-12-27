@@ -1,16 +1,15 @@
-var client = require("../common/HttpClient");
-var chalk = require('chalk');
-const log = console.log;
+const client = require("../common/HttpClient");
+const path = require("path");
+const needle = require('needle');
+const formidable = require('formidable');
+const fs = require('fs');
+const siteConfig = require("../../site_config");
 
+const chalk = require('chalk');
+const log = console.log;
 const error = chalk.bold.red;
 const warning = chalk.keyword('orange');
 const green = chalk.keyword('green');
-var path = require("path");
-
-var needle = require('needle');
-var formidable = require('formidable');
-var fs = require('fs');
-const siteConfig = require("../../site_config");
 
 //get转接服务
 exports.GetData = function (req, res) {
@@ -163,7 +162,6 @@ exports.Upload = function (req, res, next) {
             },
             parse: true
         };
-        log(siteConfig.nodeServer.OSSUploadApiPath)
         needle.post(siteConfig.nodeServer.OSSUploadApiPath, data, options)
             .on('readable', function (err, res) { /* eat your chunks */
                 let chunk;

@@ -1,10 +1,10 @@
-var client = require("../common/HttpClient");
-var qs = require("querystring");
-var api = require("../../src/api/index");
+const client = require("../common/HttpClient");
+const qs = require("querystring");
+const api = require("../../src/api/index");
 
 /*****========商品相关controls=========******/
 
-exports.indexData = function(req, res) {
+exports.indexData = function (req, res) {
     console.log("首页接口");
     client.Get(api.goods.index, "", chunk => {
         console.log("调用列表成功！");
@@ -14,7 +14,7 @@ exports.indexData = function(req, res) {
     });
 };
 
-exports.goodList = function(req, res) {
+exports.goodList = function (req, res) {
     console.log("调用列表成功");
     client.Get("goods/test", req.session.loginHeaders["set-cookie"], chunk => {
         console.log("调用列表成功，返回");
@@ -24,7 +24,7 @@ exports.goodList = function(req, res) {
     });
 };
 
-exports.goodsCat = function(req, res) {
+exports.goodsCat = function (req, res) {
     console.log("调用列表成功");
     client.Get(api.goods.cartlist, "", chunk => {
         console.log("调用列表成功，返回");
@@ -34,7 +34,7 @@ exports.goodsCat = function(req, res) {
     });
 };
 
-exports.orderAdd = function(req, res) {
+exports.orderAdd = function (req, res) {
     console.log("调用列表成功");
 
     var reqData = {
@@ -43,17 +43,17 @@ exports.orderAdd = function(req, res) {
         remark: "变态辣",
         leasePayType: 2,
         products: [{
-                productId: 35,
-                num: 1,
-                leaseMonth: 6,
-                serviceIds: [9]
-            },
-            {
-                productId: 34,
-                num: 2,
-                leaseMonth: 3,
-                serviceIds: [8, 9]
-            }
+            productId: 35,
+            num: 1,
+            leaseMonth: 6,
+            serviceIds: [9]
+        },
+        {
+            productId: 34,
+            num: 2,
+            leaseMonth: 3,
+            serviceIds: [8, 9]
+        }
         ]
     };
 

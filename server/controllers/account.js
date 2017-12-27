@@ -1,13 +1,11 @@
-var qs = require("querystring");
-var client = require("../common/HttpClient");
-var chalk = require('chalk');
+const qs = require("querystring");
+const client = require("../common/HttpClient");
+const config = require("../../site_config").nodeServer.loginConfig;
+const chalk = require('chalk');
 const log = console.log;
 const error = chalk.bold.red;
 const warning = chalk.keyword('orange');
 const green = chalk.keyword('green');
-
-const config = require("../../site_config").nodeServer.loginConfig;
-
 
 //登录
 exports.loginIn = function (req, res) {
