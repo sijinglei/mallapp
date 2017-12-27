@@ -12,82 +12,28 @@
       <mt-field label="收货人" placeholder="请输入收货人" v-model="postData.name"></mt-field>
       <mt-field label="手机号码" placeholder="请输入手机号" type="tel" v-model="postData.mobile" :attr="{ maxlength: 11}"></mt-field>
       <a class="mint-cell mint-field">
-        <!---->
         <div class="mint-cell-left"></div>
         <div class="mint-cell-wrapper">
           <div class="mint-cell-title">
-            <!---->
             <span class="mint-cell-text">所在区域</span>
-            <!---->
           </div>
           <div class="mint-cell-value">
             <span class="mint-field-core" v-model="addressInfo" v-text="addressInfo" @click="popupVisible=true"></span>
           </div>
-          <!---->
           <i class="mint-cell-allow-right"></i>
         </div>
       </a>
       <mt-field label="详细地址" placeholder="详细地址" type="textarea" rows="4" v-model="postData.addr" :attr="{ maxlength: 50 }"></mt-field>
-      <!-- <a class="mint-cell mint-field">
-        <div class="mint-cell-left"></div>
-        <div class="mint-cell-wrapper">
-          <div class="mint-cell-title">
-            <span class="mint-cell-text">收货人</span>
-          </div>
-          <div class="mint-cell-value">
-            <input placeholder="请输入收货人" type="text" v-model="postData.name" class="mint-field-core">
-          </div>
-        </div>
-      </a>
-      <a class="mint-cell mint-field">
-        <div class="mint-cell-left"></div>
-        <div class="mint-cell-wrapper">
-          <div class="mint-cell-title">
-            <span class="mint-cell-text">手机号码</span>
-          </div>
-          <div class="mint-cell-value">
-            <input placeholder="请输入手机号码" type="mobile" v-model="postData.mobile" class="mint-field-core">
-          </div>
-        </div>
-      </a>
-      <a class="mint-cell mint-field">
-        <div class="mint-cell-left"></div>
-        <div class="mint-cell-wrapper">
-          <div class="mint-cell-title">
-            <span class="mint-cell-text">所在区域</span>
-          </div>
-          <div class="mint-cell-value">
-            <span class="mint-field-core" v-model="addressInfo" v-text="addressInfo" @click="popupVisible=true"></span>
-          </div>
-          <i class="mint-cell-allow-right"></i>
-        </div>
-      </a>
-      <a class="mint-cell mint-field is-textarea">
-        <div class="mint-cell-left"></div>
-        <div class="mint-cell-wrapper">
-          <div class="mint-cell-title">
-            <span class="mint-cell-text">详细地址</span>
-          </div>
-          <div class="mint-cell-value">
-            <textarea placeholder="详细地址" rows="4" class="mint-field-core" v-model="postData.addr" maxlength="100"></textarea>
-          </div>
-        </div>
-      </a> -->
       <div class="mint-cell-wrapper" style="margin:17px 0;">
         <div class="mint-cell-title">
-          <!---->
           <label class="mint-checklist-label">
             <span class="mint-checkbox">
-              <input type="checkbox" class="mint-checkbox-input" value="1" v-model="postData.defAddr" :checked="postData.defAddr">
+              <input type="checkbox" class="mint-checkbox-input" v-model="isDefault" @click="setDefaltAddr()">
               <span class="mint-checkbox-core"></span>
             </span>
             <span class="mint-checkbox-label">设为默认地址</span>
           </label>
         </div>
-        <div class="mint-cell-value">
-          <span></span>
-        </div>
-        <!---->
       </div>
       <div class="btns">
         <button class="mint-button mint-button--primary mint-button--large" @click="save">
@@ -128,6 +74,7 @@ export default {
           value: 1
         }
       ],
+      isDefault: false,
       postData: {
         requrl: api.member.addaddress,
         id: 0,
@@ -153,7 +100,6 @@ export default {
     vm.postData.id = vm.$route.query.id || 0;
     vm.isadd = vm.$route.query.isadd || 1;
     vm.title = vm.isadd == 1 ? "新建地址" : "编辑收货地址";
-    vm.getAddressList(); //获取地址列表
   },
   mounted() {
     var vm = this;
@@ -163,7 +109,8 @@ export default {
   },
   methods: {
     setDefaltAddr() {
-      alert(this.postData.defAddr);
+      var vm = this;
+      vm.isDefault = !vm.isDefault;
     },
     sureCheck(strArea) {
       let addressIds = strArea.split("|")[0].split("-");
@@ -178,7 +125,6 @@ export default {
       this.postData.region = addressNames[2];
       this.popupVisible = false;
     },
-    getAddressList() {},
     getInfo() {
       var vm = this;
       vm.$axios
@@ -196,7 +142,7 @@ export default {
                 vm.postData[k] = data[k];
               }
             }
-
+            vm.isDefault = data.defAddr == 1 ? true : false;
             vm.addressInfo =
               vm.postData.province +
               "-" +
@@ -204,7 +150,6 @@ export default {
               "-" +
               vm.postData.region;
           }
-          console.log(vm.postData);
         });
     },
     save() {
@@ -213,7 +158,7 @@ export default {
         vm.$axios.post(api.post, vm.postData).then(res => {
           if (res.code == "999") {
             Toast({
-              message: "新增成功",
+              message: vm.isadd == 1 ? "新增成功" : "更新成功",
               position: "bottom"
             });
             vm.goBack();
@@ -279,7 +224,7 @@ export default {
     }
   },
   watch: {
-    "postData.defAddr"(val, oldval) {
+    isDefault(val, oldval) {
       this.postData.defAddr = val ? 1 : 0;
     }
   },

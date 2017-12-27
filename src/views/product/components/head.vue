@@ -1,14 +1,14 @@
 <template>
     <div class="box">
       <div @click="back()">
-        <i class="icon icon-large"></i>
+        <i class="icon icon-zjt"></i>
       </div>
       <div class="product-switch">
         <span :class="{'active':isDetail==0}" @click="chose(0)">商品</span>
         <span :class="{'active':isDetail==1}" @click="chose(1)">详情</span>
       </div>
       <div>
-        <i class="icon icon-share"></i>
+        <i class="icon icon-share" @click="shareShow"></i>
       </div>
     </div>
 </template>
@@ -26,6 +26,9 @@
           },
           chose(val){
               this.$parent.choseDetail(val)
+          },
+          shareShow(){
+              this.$emit('shareShow',true)
           }
         },
         mounted() {
@@ -50,6 +53,7 @@
     z-index: 1000;
     position: fixed;
     box-sizing: border-box;
+    .icon-zjt,.icon-share{  font-size: 16px;}
     .product-switch{
       border: 1px solid $WtsColor;/*no*/
       height: 32px;/*no*/

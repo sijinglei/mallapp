@@ -1,7 +1,7 @@
 <template>
     <div class="">
       <t-dhead :Title="pageTitle"></t-dhead>
-      <mt-cell is-link :to="{name:'Address'}">
+      <mt-cell is-link :to="{name:'Address',query:{id:'999'}}">
         <div slot="title" class="cell-key">
           <div class="address-box">
             <div v-if="currentAddress">

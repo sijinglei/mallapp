@@ -12,9 +12,17 @@
       <!--banner end-->
       <!---->
       <section class="s-nav" v-else-if="item.showStyleType>=2 && item.showStyleType<=5">
-        <div class="item" v-for="item in item.infos">
-          <div><img :src="item.imageUrl" :alt="item.title" /> </div>
-          <div>{{item.title}}</div>
+        <div v-if="item.infos.length==2" class="two-box">
+          <div v-for="item in item.infos" class="itemt">
+            <img :src="item.imageUrl" :alt="item.title" />
+            <div class="tit">{{item.title}}</div>
+          </div>
+        </div>
+        <div v-else class="th-nav">
+          <div v-for="item in item.infos" class="item">
+            <div><img :src="item.imageUrl" :alt="item.title" /> </div>
+            <div>{{item.title}}</div>
+          </div>
         </div>
       </section>
       <!---->
@@ -97,22 +105,52 @@ export default {
   padding-bottom: 48px;
   background-color: #f5f5f5;
   .s-nav {
-    display: flex;
     font-size: 14px;
     background-color: #ffffff;
-    justify-content: space-around;
-
-    .item {
-      text-align: center;
-      color: #666666;
-      img {
-        width: 40px;
-        height: 40px;
-        margin-top: 16px;
-        margin-bottom: 8px;
+    .two-box {
+      width: 100%;
+      display: flex;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      .itemt {
+        width: 50%;
+        // padding-left: 8px;
+        align-items: center;
+        display: flex;
+        &:first-child {
+          border-right: 1px solid #f3f3f3; /*no*/
+        }
+        &:last-child {
+          img {
+            margin-left: 16px;
+          }
+        }
+      }
+      .tit {
+        width: 80%;
+        display: block;
+        line-height: 40px;
+        flex-shrink: 1;
+        text-align: center;
       }
     }
-    padding-bottom: 16px;
+    .th-nav {
+      display: flex;
+      justify-content: space-around;
+      padding-bottom: 8px;
+      .item {
+        text-align: center;
+        color: #666666;
+      }
+    }
+
+    img {
+      border-radius: 8px;
+      width: 60px;
+      height: 60px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
   }
 }
 </style>

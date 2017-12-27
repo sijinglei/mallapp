@@ -10,7 +10,7 @@
       </router-link>
       <router-link to="/center" v-show="userinfo.nickname!=''">
         <div class="photo">
-          <img src="../../assets/images/head.png" alt="">
+          <img :src="userinfo.portraitSuffix==''?require('../../assets/images/head.png'):userinfo.portraitSuffix" alt="">
         </div>
         <p class="name">{{userinfo.nickname}}</p>
       </router-link>
@@ -101,7 +101,8 @@ export default {
     return {
       selected: "UserIndex",
       userinfo: {
-        nickname: ""
+        nickname: "",
+        portraitSuffix: ""
       },
       memberId: "", //用户Id
       pendingAmount: 0, //普通订单待付款数量
@@ -117,6 +118,7 @@ export default {
     this.userinfo = com.getSession("loginUserBaseInfo")
       ? JSON.parse(com.getSession("loginUserBaseInfo"))
       : this.userinfo;
+    console.log(this.userinfo);
   },
   mounted: function() {
     var vm = this;
@@ -180,6 +182,7 @@ export default {
     height: 88px;
     width: 88px;
     margin-top: 6px;
+    border-radius: 50%;
   }
   a {
     display: block;

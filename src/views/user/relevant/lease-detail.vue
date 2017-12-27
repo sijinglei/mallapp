@@ -289,14 +289,14 @@ export default {
     background-size: cover;
     background-position: center center;
     box-sizing: border-box;
-    padding: 16px;
+    padding: 16px; /*no*/
     .order-sn {
       width: 60%;
       margin: 0 auto;
-      height: 20px;
+      height: 20px; /*no*/
       p {
         text-align: center;
-        font-size: 14px;
+        font-size: 14px; /*no*/
         color: #fff;
         position: relative;
         span {
@@ -323,7 +323,7 @@ export default {
     }
     .order-money {
       display: flex;
-      margin-top: 16px;
+      margin-top: 16px; /*no*/
       justify-content: center;
       align-items: center;
       > div {
@@ -333,12 +333,12 @@ export default {
           text-align: center;
         }
         .tip {
-          font-size: 12px;
+          font-size: 12px; /*no*/
           color: #d9f1dd;
         }
         .money {
-          margin-top: 8px;
-          font-size: 28px;
+          margin-top: 8px; /*no*/
+          font-size: 28px; /*no*/
           color: #fff;
         }
       }
@@ -347,7 +347,7 @@ export default {
 }
 .lease-table {
   background: #fff;
-  padding-top: 180px; /*no*/
+  padding-top: 181px; /*no*/
   margin-bottom: 58px; /*no*/
   .col1 {
     float: left;
@@ -377,8 +377,8 @@ export default {
     color: #999;
   }
   dt {
-    height: 30px; /*no*/
-    line-height: 30px; /*no*/
+    height: 30px;
+    line-height: 30px;
     @extend .bt-line;
     .col1 {
       padding-left: 16px; /*no*/

@@ -1,7 +1,8 @@
 <template>
-
   <div style="overflow: hidden;height: 100%;">
     <head-search></head-search>
+    <!--无数据显示-->
+    <!--<t-empty :is-show="productList.length == 0" :empty-text="emptyText"></t-empty>-->
     <div class="catename">
       <div class="catename-left" :style="styleHeight">
         <ul class="catelist">
@@ -24,9 +25,6 @@
             </ul>
           </div>
         </div>
-        <div class="zanwu" v-show="this.productList.length==0">
-          暂无数据...
-        </div>
       </div>
     </div>
     <t-tabar :selected="selected"></t-tabar>
@@ -37,8 +35,9 @@
 import api from "@/api";
 import headSearch from "@/components/category/search";
 import tTabar from "@/components/common/tabar";
+import tEmpty from "@/components/common/empty"; //暂无数据
 export default {
-  components: { headSearch, tTabar },
+  components: { headSearch, tTabar,tEmpty },
   name: "Category", //分类
   data() {
     return {

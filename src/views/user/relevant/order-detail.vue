@@ -41,7 +41,7 @@
         <div class="t-list">
           <ul>
             <li v-for="item in detail.products">
-              <a href="">
+              <router-link :to="{path:'product/detail/'+item.productId+''}">
                 <img :src="item.imageUrl" class="img" alt="">
                 <div class="content">
                   <p class="t-title" v-text="item.name"></p>
@@ -52,7 +52,7 @@
                     </span>
                   </p>
                 </div>
-              </a>
+              </router-link>
             </li>
           </ul>
         </div>

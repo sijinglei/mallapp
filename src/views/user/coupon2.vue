@@ -83,7 +83,6 @@ export default {
       String(this.$route.query.id) === "0" || this.$route.query.id
         ? this.$route.query.id
         : -1;
-    alert(this.couponId);
   },
   mounted() {
     this.getList();
@@ -187,6 +186,12 @@ export default {
     },
     useCoupon(id) {
       //立即使用优惠券
+      this.$router.push({
+        path: "/productlist",
+        query: {
+          value: ""
+        }
+      });
     }
   },
   computed: {

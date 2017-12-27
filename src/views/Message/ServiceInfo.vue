@@ -52,6 +52,7 @@
           this.getServiceList();
         },
         methods: {
+          //跳转服务详情
           msgDetail(id){
             var that = this;
             that.detailParams.messageId=id;

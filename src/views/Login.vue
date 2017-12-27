@@ -8,8 +8,8 @@
       <mt-field label="用户名" placeholder="请输入用户名" v-model="userInfo.username"></mt-field>
       <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userInfo.userpwd"></mt-field>
       <div class="m-help">
-        <router-link to="/about">忘记密码？</router-link>
-        <router-link to="/about">注册</router-link>
+        <router-link to="/forget">忘记密码？</router-link>
+        <router-link to="/register">注册</router-link>
       </div>
       <mt-button type="primary" size="large" @click.native="login">登录</mt-button>
     </div>
@@ -20,7 +20,6 @@
 import { Toast } from "mint-ui";
 import api from "@/api";
 import com from "@/api/common";
-import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -31,29 +30,22 @@ export default {
       }
     };
   },
-  created() {},
   methods: {
     login() {
-      var that = this;
-      console.log("======请求开始=======");
-      that.$axios
+      var vm = this;
+      vm.$axios
         .get(api.account.login, {
-          params: that.userInfo
+          params: vm.userInfo
         })
         .then(function(data) {
-          console.log("请求成功！！！！");
           //保存用户登录信息
           com.setSession("loginUserBaseInfo", JSON.stringify(data.data));
-          Toast({
-            message: "登录成功"
-          });
-          that.$router.push({
+          vm.$router.push({
             path: "/home"
           });
         });
     }
-  },
-  destroyed: function() {}
+  }
 };
 </script>
 

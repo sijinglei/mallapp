@@ -8,7 +8,7 @@
     <div class="data-list">
       <ul>
         <li v-for="(item,index) in datalist">
-          <div class="address-box" @click="Choose(index)">
+          <div class="address-box" @click="Choose(index,item.id)">
             <div class="check-box" v-show="adressType==1">
               <span class="mint-checkbox">
                 <input type="checkbox" class="mint-checkbox-input" value="" :checked="addressId==item.id">
@@ -72,10 +72,14 @@ export default {
         })
         .catch(err => {});
     },
-    Choose(index) {
+    Choose(index, id) {
       var vm = this;
-      vm.$store.commit('SETADDRESS',vm.datalist[index]);
-      this.$router.go(-1);
+      if (vm.$route.query.id) {
+        vm.$store.commit("SETADDRESS", vm.datalist[index]);
+        this.$router.go(-1);
+      } else {
+        vm.editAdress(id);
+      }
     },
     editAdress(val) {
       var vm = this;

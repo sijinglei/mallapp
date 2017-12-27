@@ -1,6 +1,6 @@
 <template>
     <div class="detail">
-      <t-detail-head :isDetail="isDetail" @choseDetail="choseDetail"></t-detail-head>
+      <t-detail-head :isDetail="isDetail" @choseDetail="choseDetail" @shareShow="shareShowMt"></t-detail-head>
         <div v-if="isDetail==0">
             <mt-loadmore :bottomMethod="loadBot"  :auto-fill="false" ref="loadBot">
              <div>
@@ -66,7 +66,13 @@
       >
         <component v-bind:is="choseCar" @setId="setId" @hidePopup="hidePopup"  :productDateProp="productDate"  :productId="productId" :btnText="btnText"></component>
       </mt-popup>
-
+      <mt-popup
+        v-model="shareShow"
+        popup-transition="popup-fade"
+        position="bottom"
+      >
+       <t-share @shareShow="shareShowMt"></t-share>
+      </mt-popup>
 
     </div>
 </template>
@@ -78,9 +84,10 @@
   import tChose from '@/components/cars/detail-chose';
   import tDetailBasic from '@/views/product/components/basic'; //产品说明
   import tDetailintro from '@/views/product/components/intro';//
+  import tShare from '@/components/common/share'
   export default {
       components:{
-            tDetailHead,tChose,tDetailBasic,tDetailintro
+            tDetailHead,tChose,tDetailBasic,tDetailintro,tShare
         },
         data () {
             return {
@@ -94,7 +101,8 @@
               nub:1,
               bottomAllLoaded:false,
               autoFill:true,
-              isFir:true
+              isFir:true,
+              shareShow:false,//分享控制
 
             }
         },
@@ -137,6 +145,9 @@
               return val;
             }
 
+          },
+          shareShowMt(ms){
+              this.shareShow=ms;
           },
           handleChange(index){
               this.hanleIndex=index+1;

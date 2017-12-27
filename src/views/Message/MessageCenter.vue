@@ -28,7 +28,7 @@
               </div>
               <div class="text">
                 <p class="title">服务消息</p>
-                <p class="described">您有1张优惠券到账了</p>
+                <p class="described">您有{{serviceMsgCount}}张优惠券到账了</p>
               </div>
             </div>
             <div class="right">
@@ -149,7 +149,7 @@
       background: #FE3824;
       text-align: center;
       line-height: 22px;
-      font-size: 16px;
+      font-size: 12px;
       color: #FFFFFF;
       border-radius: 100%;
     }
