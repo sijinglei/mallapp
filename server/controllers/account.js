@@ -45,7 +45,19 @@ exports.loginIn = function (req, res) {
 };
 //注册
 exports.register = function (req, res) {
-    var mobile = req.query.mobile;
+    var reqData = {
+        mobile: req.query.mobile,
+        code: req.query.code
+    }
+    client.GetByClientId(
+        "/user.mobile.register?" + qs.stringify(reqData),
+        (headers, chunk) => {
+            var obj = JSON.parse(chunk);
+            log(warning("------------注册成功---------------"));
+            log(obj);
+            res.json(obj);
+        }
+    );
 };
 
 //获取手机验证码
@@ -54,7 +66,9 @@ exports.getMobileCode = function (req, res) {
     client.GetByClientId(
         "/user.register.mobile.code?mobile=" + mobile,
         (headers, chunk) => {
-            var obj = JSON.parse(chunk);
+            log('发送验证码')
+            log(headers);
+            var obj = JSON.parse(headers);
             res.json(obj);
         }
     );
