@@ -1,10 +1,11 @@
 module.exports = {
     get: "/api/get",
     post: "/api/post",
+    upload: '/api/upload',
     account: {
         login: "/api/account/loginIn",
-        register: "account/register",
-        getmobilecode: "user/mobilecode"
+        register: "/api/account/register",
+        getmobilecode: "/api/user/mobilecode"
     },
     area: {
         list: "area/getlist", //获取区域下拉框 (省/市/县区)
@@ -78,7 +79,7 @@ module.exports = {
         helpdetail: "help/message/detail", //帮助中心详情
         agreements: "agreement/detail" //租赁协议信息
     },
-    upload: {
-        certfileupload: "file/uploadImage" //租赁认证图片上传
-    }
+    // upload: {
+    //     certfileupload: "file/uploadImage" //租赁认证图片上传
+    // }
 };
