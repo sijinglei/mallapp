@@ -8,7 +8,7 @@
     "dev": "node build/dev-server.js",
     "start": "node ./bin/www",
     "build": "node build/build.js",
-    "forever": "forever start ./bin/www"
+    "forever": "forever start  --minUptime 1000 --spinSleepTime 1000 ./bin/www"
   },
   "dependencies": {
     "axios": "^0.17.1",

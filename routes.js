@@ -12,6 +12,8 @@ var order = controllers.order;
 var router = express.Router();
 
 var islogin = false;
+//注册
+router.get(api.account.register, account.register);
 //登录
 router.get(api.account.login, account.loginIn);
 //发送手机验证码
