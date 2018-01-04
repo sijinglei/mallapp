@@ -25,10 +25,6 @@
     </mt-cell>
     <input class="file" style="display:none" name="file" type="file" accept="image/*" @change="uploadImg($event)" ref="avatarInput" />
     <mt-cell title="昵称" :value="userinfo.nickname"></mt-cell>
-    <mt-cell title="一句话简介" to="//github.com" is-link value="我是一个小小小小鸟">
-    </mt-cell>
-    <mt-cell title="性别" to="//github.com" is-link value="保密">
-    </mt-cell>
   </div>
 </template>
 

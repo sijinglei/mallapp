@@ -23,7 +23,7 @@
           </label>
         </div>
       </div>
-      <mt-button type="primary" size="large" @click.native="register" :disabled="!isDefault">登录</mt-button>
+      <mt-button type="primary" size="large" @click.native="register" :disabled="!isDefault">确定</mt-button>
     </div>
   </div>
 </template>
@@ -46,18 +46,21 @@ export default {
       this.isDefault = !this.isDefault;
     },
     register() {
-      // var that = this;
-      // that.$axios
-      //   .get(api.account.login, {
-      //     params: that.userInfo
-      //   })
-      //   .then(function(data) {
-      //     //保存用户登录信息
-      //     com.setSession("loginUserBaseInfo", JSON.stringify(data.data));
-      //     that.$router.push({
-      //       path: "/home"
-      //     });
-      //   });
+      var vm = this;
+      vm.$axios
+        .get(api.account.register, {
+          params: {
+            mobile: vm.mobile,
+            code: vm.code
+          }
+        })
+        .then(function(data) {
+          console.log("注册成功");
+          //保存用户登录信息
+          vm.$router.push({
+            path: "/login"
+          });
+        });
     },
     sendCode() {
       var vm = this;
@@ -72,9 +75,8 @@ export default {
       }
       vm.$refs.timerbtn.start(); //启动倒计时
       vm.$axios
-        .get(api.get, {
+        .get(api.account.getmobilecode, {
           params: {
-            requrl: api.account.getmobilecode,
             mobile: vm.mobile
           }
         })

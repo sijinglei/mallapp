@@ -136,7 +136,4 @@ export default {
 
 <style scoped lang="scss" >
 @import "../../assets/css/order";
-.main-body {
-  padding-top: 86px;
-}
 </style>

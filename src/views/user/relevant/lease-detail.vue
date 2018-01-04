@@ -59,6 +59,7 @@
           <span class="mint-checkbox-core"></span>
         </span>
         <span>已选
+          <i class="mark">￥</i>
           <i v-model="checkAmount">{{checkAmount}}</i>
         </span>
       </div>
@@ -443,21 +444,23 @@ export default {
     box-sizing: border-box;
     padding-left: 16px;
     i {
-      list-style: none;
-      font-size: 18px;
+      font-size: 18px; /*no*/
       color: #ff7733;
-      position: relative;
-      padding-left: 10px;
-      &::before {
-        content: "￥";
-        display: block;
-        position: absolute;
-        width: 10px;
-        height: 20px;
-        top: -7px;
-        left: 0px;
-        font-size: 12px;
+      &.mark {
+        font-size: 12px; /*no*/
+        margin-right: -5px;
       }
+      // padding-left: 10px;
+      // &::before {
+      //   content: "￥";
+      //   display: block;
+      //   position: absolute;
+      //   width: 10px;
+      //   height: 20px;
+      //   top: -7px;
+      //   left: 0px;
+      //   font-size: 12px;
+      // }
     }
   }
   .btn-hk {
