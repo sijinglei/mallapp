@@ -95,7 +95,6 @@
 import tTabar from "@/components/common/tabar";
 import api from "@/api";
 import com from "@/api/common";
-
 export default {
   data() {
     return {
@@ -115,9 +114,8 @@ export default {
     };
   },
   created() {
-    this.userinfo = com.getSession("loginUserBaseInfo")
-      ? JSON.parse(com.getSession("loginUserBaseInfo"))
-      : this.userinfo;
+    let userInfo = this.$store.state.login.userinfo;
+    this.userinfo = userInfo || this.userinfo;
     console.log(this.userinfo);
   },
   mounted: function() {

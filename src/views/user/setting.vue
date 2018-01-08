@@ -28,8 +28,16 @@ export default {
   },
   methods: {
     layout() {
-      com.setSession("loginUserBaseInfo", "");
-      this.$router.push({ name: "UserIndex" });
+      this.$store
+        .dispatch("LOGIN_OUT")
+        .then(() => {
+          this.$router.push({
+            path: "/home"
+          });
+        })
+        .catch(err => {
+          this.$message.error(err);
+        });
     }
   }
 };

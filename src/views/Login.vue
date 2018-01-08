@@ -19,7 +19,6 @@
 <script>
 import { Toast } from "mint-ui";
 import api from "@/api";
-import com from "@/api/common";
 export default {
   data() {
     return {
@@ -33,17 +32,7 @@ export default {
   methods: {
     login() {
       var vm = this;
-      vm.$axios
-        .get(api.account.login, {
-          params: vm.userInfo
-        })
-        .then(function(data) {
-          //保存用户登录信息
-          com.setSession("loginUserBaseInfo", JSON.stringify(data.data));
-          vm.$router.push({
-            path: "/home"
-          });
-        });
+      vm.$store.dispatch("LOGIN_IN", vm);
     }
   }
 };
